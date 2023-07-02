@@ -1,11 +1,6 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <title>Новое кафе</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
-  <link href="https://getbootstrap.com/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-</head>
+<head th:insert="~{blocks/head :: head}"></head>
 <body>
 
 <header th:insert="~{blocks/header :: header}"></header>
@@ -37,8 +32,7 @@
     </div>
     <br>
 
-    <div style="display: flex;
-  justify-content: center;">
+    <div style="display: flex; justify-content: center;">
     <button type = "submit" class="btn btn-dark btn-lg" style="padding-left: 10em; padding-right: 10em;">Добавить кафе</button>
     </div>
 
