@@ -1,0 +1,67 @@
+
+<!--<div th: fragment = "header">
+  <div class="container">
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Главная</a></li>
+        <li class="nav-item"><a href="/cafes" class="nav-link">Заведения</a></li>
+        <li class="nav-item"><a href="/cafes/add" class="nav-link">Добавить кафе</a></li>
+        <li class="nav-item"><a href="/dishes" class="nav-link">Блюда</a></li>
+        <li class="nav-item"><a href="/dishes/add" class="nav-link">Добавить блюдо</a></li>
+        <li class="nav-item"><a href="/categories" class="nav-link">Категории</a></li>
+        <li class="nav-item"><a href="/categories/add" class="nav-link">Добавить категорию</a></li>
+        <li class="nav-item"><a href="/about" class="nav-link">Про нас</a></li>
+      </ul>
+    </header>
+  </div>
+</div>-->
+
+
+<div class="container" th:fragment = "header" >
+  <header class="border-bottom lh-1 py-3">
+    <div class="row flex-nowrap justify-content-between align-items-center">
+      <div class="col-4 pt-1">
+        <a class="link-secondary" href="#" _msttexthash="2387801" _msthash="6" style="color: black!important;">Подписываться</a>
+      </div>
+      <div class="col-4 text-center">
+        <a class="blog-header-logo text-body-emphasis text-decoration-none" href="/" _msttexthash="986219" _msthash="7" style="color: black!important;">Хафка здесь</a>
+      </div>
+      <div class="col-4 d-flex justify-content-end align-items-center">
+        <a class="link-secondary" href="#" aria-label="Искать" _mstaria-label="74607" _msthash="8">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" style="color: black!important;" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img" viewBox="0 0 24 24"><title _mstTextHash="802048" _mstHash="9">Искать</title><circle cx="10.5" cy="10.5" r="7.5"></circle><path d="M21 21l-5.2-5.2"></path></svg>
+        </a>
+        <a class="btn btn-sm btn-outline-secondary" href="#" _msttexthash="1860755" _msthash="10" style="color: black!important;">Регистрация</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="nav-scroller py-1 mb-3 border-bottom">
+    <nav class="nav nav-underline justify-content-between">
+      <a class="nav-item nav-link link-body-emphasis" href="/cafes" _msttexthash="335348" _msthash="11" style="color: black!important;">Заведения</a>
+      <a class="nav-item nav-link link-body-emphasis" href="/cafes/add" _msttexthash="328523" _msthash="12" style="font-style: italic; color: black!important;">+кафе</a>
+      <a class="nav-item nav-link link-body-emphasis" href="/categories" _msttexthash="1615887" _msthash="13" style="color: black!important;">Меню</a>
+      <a class="nav-item nav-link link-body-emphasis" href="/categories/add" _msttexthash="2380365" _msthash="14" style="font-style: italic; color: black!important;">+категория</a>
+      <a class="nav-item nav-link link-body-emphasis" href="/dishes" _msttexthash="1183767" _msthash="15" style="color: black!important;">Еда</a>
+      <a class="nav-item nav-link link-body-emphasis" href="/dishes/add" _msttexthash="474903" _msthash="16" style="font-style: italic; color: black!important;">+блюдо</a>
+    </nav>
+  </div>
+  <script>
+    // Get the current URL
+    var currentUrl = window.location.href;
+
+    // Get all the nav links
+    var navLinks = document.getElementsByClassName("nav-link");
+
+    // Loop through the nav links
+    for (var i = 0; i < navLinks.length; i++) {
+      var link = navLinks[i];
+
+      // Check if the link's href matches the current URL
+      if (link.href === currentUrl) {
+        // Add the "active" class to the link
+        link.classList.add("active");
+      }
+    }
+  </script>
+</div>
+

@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Подробнее о кафе</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!--  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">-->
+<!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+    <link href="https://getbootstrap.com/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link rel="stylesheet" href="/css/collapse.scss" />
+
+</head>
+<body>
+
+<header th:insert="~{blocks/header :: header}"></header>
+
+
+<div class="container col-xxl-8 px-4 py-5" th:each="el : ${cafe}" style="padding-bottom: 0!important;">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5" style="padding-bottom: 0!important;">
+        <div class="col-10 col-sm-8 col-lg-6">
+            <img th:src="${el.linkPhoto}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+        </div>
+        <div class="col-lg-6">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3" style="font-weight: 800;" th:text="${el.name}"></h1>
+                <strong class="d-inline-block mb-2 text-primary-emphasis btn btn-outline-warning" style="font-size: x-large; float: right; display: flex!important; flex-direction: column;!important; padding: 10px!important;" >
+                    <strong class="d-inline-block mb-2 text-primary-emphasis" style="font-size: xx-large; font-weight: bold; float: right; margin-bottom: 0!important; min-width: 81px" th:text="${el.rating} + ' ☆'"></strong>
+
+                    <small class="d-inline-block mb-2 text-primary-emphasis" style="font-size: x-small; color: black; font-weight: bold; float: right; margin-bottom: 0!important;" th:text="${el.views} + '(◕‿◕)'"></small>
+                </strong>
+<!--                <small class="d-inline-block mb-2 text-primary-emphasis" style="font-size: small; font-weight: bold; float: right;" th:text="${el.views} + ' (◕‿◕)'"></small>-->
+            </div>
+            <h6 style="font-weight: 800;" th:text="${el.address}"/>
+            <p class="lead" th:text="${el.description}"></p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a th:href="'/cafes/' + ${el.idCafe} +'/edit'" class="btn btn-primary btn-lg px-4 me-md-2" style="margin-right: 1.5rem!important;">Редактировать</a>
+                <form th:action="'/cafes/' + ${el.idCafe} + '/remove'" method="post">
+                 <button type="submit" class="btn btn-outline-secondary btn-lg px-4">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---->
+<div class = "container mt-5">
+<div class="row g-5">
+    <div class = "col-md-9">
+      <div id="accordion" th:each="el : ${cafe}">
+                <div class="card" th:each="category : ${el.categories}" th:if="${!category.dishes.isEmpty()}">
+
+                      <div class="card-header" id="headingOne">
+                        <h5 class="mb-0" >
+                  <!--        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">-->
+                  <!--          Закуски-->
+                  <!--        </button>-->
+                          <button th:text="${category.name}" class="accordion-button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"  aria-controls="panelsStayOpen-collapseOne">
+
+                          </button>
+                        </h5>
+                      </div>
+
+                      <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+                          <div class="row" >
+
+                            <div class="col-lg-4" style="direction: ltr;" th:each="dish : ${el.dishes}" th:if="${dish.category.idCaT == category.idCaT}">
+                                <!-- Проверяем, принадлежит ли блюдо к текущей категории -->
+
+                                  <img style="border: 2px solid black;" class="bd-placeholder-img rounded-circle" width="140" height="140" th:src="${dish.linkPhoto}" role="img" aria-label="Заполнитель" preserveAspectRatio="xMidYMid slice" focusable="false" _mstaria-label="177515" _mstHash="27"><title _mstTextHash="1858532" _mstHash="28">Заполнитель</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></img>
+                                  <h2 class="fw-normal" _msttexthash="632489" _msthash="29" th:text="${dish.name}"></h2>
+                                  <p _msttexthash="259093796" _msthash="30" th:text="${dish.description}"></p>
+                                  <p><a class="btn btn-secondary" _msttexthash="1388361" _msthash="31" th:href="'/dishes/' + ${dish.idDish}">Подробнее</a></p>
+
+                                <!-- /.col-lg-4 -->
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                </div>
+      </div>
+    </div>
+
+    <!---->
+
+    <div class="col-md-2">
+        <div class="position-sticky" style="top: 2rem;">
+
+
+            <div th:each="el : ${cafe}">
+
+                <h4 class="fst-italic" _msttexthash="3931239" _msthash="120" th:if="${!el.categories.isEmpty()}" >Категории</h4>
+
+                <ul class="list-unstyled" >
+                    <li th:each="category : ${el.categories}" >
+                        <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" th:href="'/categories/' + ${category.idCaT}">
+                            <img class="bd-placeholder-img" style="width: auto" height="96" th:src="${category.linkPhoto}" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></img>
+                            <div class="col-lg-8">
+                                <h6 class="mb-0" _msttexthash="7113873" _msthash="121" th:text="${category.name}"></h6>
+                            </div>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+</body>
+</html>

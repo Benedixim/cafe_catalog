@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Новое кафе</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+  <link href="https://getbootstrap.com/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+
+<header th:insert="~{blocks/header :: header}"></header>
+
+
+<div class = "container mt-5 mb-5">
+
+  <h1 style="text-align: center">Добавление нового кафе</h1>
+
+  <form action = "/cafes/add" method="post" class="form-floating">
+    <div class="form-floating mb-3">
+    <input type="text" name="name" class="form-control" id="floatingName" placeholder="Название">
+    <label for="floatingName">Название</label>
+    </div>
+
+    <div class="form-floating mb-3">
+    <input type="text" name="address" class="form-control" id="floatingAddress" placeholder="Адрес">
+    <label for="floatingAddress">Адрес</label>
+    </div>
+
+    <div class="form-floating mb-3">
+    <input type="url" name="link" class="form-control" id="floatingLink" placeholder="Ссылка на фото">
+    <label for="floatingLink">Ссылка на фото</label>
+    </div>
+
+    <div class="input-group">
+      <span class="input-group-text">Описание</span>
+      <textarea class="form-control" name="description" aria-label="With textarea" placeholder="Введите описание заведения"></textarea>
+    </div>
+    <br>
+
+    <div style="display: flex;
+  justify-content: center;">
+    <button type = "submit" class="btn btn-dark btn-lg" style="padding-left: 10em; padding-right: 10em;">Добавить кафе</button>
+    </div>
+
+  </form>
+</div>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+
+
+
+</body>
+</html>

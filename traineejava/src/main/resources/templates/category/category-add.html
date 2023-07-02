@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Новая категория</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+  <link href="https://getbootstrap.com/docs/5.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+
+<header th:insert="~{blocks/header :: header}"></header>
+
+
+<div class = "container mt-5 mb-5">
+  <h1>Добавление новую категорию блюд</h1>
+  <form action = "/categories/add" method="post">
+    <input type="text" name="name" placeholder="Введите название категории" class="form-control"><br>
+    <input type="text" name="link" placeholder="Введите ссылку на фото" class="form-control"><br>
+
+<!--    <select name="cafe" class="form-control">-->
+<!--      <option value="">Выберите кафе</option>-->
+<!--      &lt;!&ndash; Здесь вы можете использовать цикл Thymeleaf для создания опций &ndash;&gt;-->
+<!--      <option th:each="cafe : ${cafes}" th:value="${cafe.name}" th:text="${cafe.name}"></option>-->
+<!--    </select>-->
+
+    <textarea  name="description" placeholder="Введите описание категории" class="form-control"></textarea><br>
+    <button type = "submit" class="btn btn-success" >Добавить категорию</button>
+  </form>
+</div>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+</body>
+</html>
