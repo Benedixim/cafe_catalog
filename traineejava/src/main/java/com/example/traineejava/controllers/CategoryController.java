@@ -65,7 +65,37 @@ public class CategoryController {
         if(!categoryRepository.existsById(idCaT)){
             return "redirect:/categories";
         }
+
+
+
         Optional<Category> category = categoryRepository.findById(idCaT);
+
+
+
+
+        Iterable<Dish> dishesHave = dishRepository.findByCategory(category.get());
+
+
+//        List<Dish> dishesToRemove = new ArrayList<>();
+//        for(Dish d: dishesToDelete){
+//            if(!d.getCategory().getName().equals(category.getClass().getName())) dishesToRemove.add(d);
+//        }
+//        dishesToDelete = dishesToRemove;
+        model.addAttribute("dishesToDelete", dishesHave);//передаем в шаблон
+
+        List<Cafe> cafeHave = new ArrayList<>();
+        List<Cafe> l;
+        for (Dish d: dishesHave){
+            l = new ArrayList<>();
+            l = cafeRepository.findByDishesContains(d);
+            for (Cafe cafe: l){
+                if(!cafeHave.contains(cafe)) cafeHave.add(cafe);
+            }
+        }
+        model.addAttribute("cafesHave", cafeHave);//передаем в шаблон
+
+
+
         ArrayList<Category> res = new ArrayList<>();
         category.ifPresent(res::add);
         model.addAttribute("category", res);
@@ -87,8 +117,12 @@ public class CategoryController {
         model.addAttribute("category", res);
 
 
+        Iterable<Dish> dishesToDelete = dishRepository.findByCategory(category.get());
+        model.addAttribute("dishesToDelete", dishesToDelete);//передаем в шаблон
 
-        Iterable<Dish> dishes = dishRepository.findAll(); //массив всех данных полученные из таблички Post
+
+
+        Iterable<Dish> dishes = dishRepository.findByCategoryIsNot(category.get()); //массив всех данных полученные из таблички Post
         model.addAttribute("dishes", dishes);//передаем в шаблон
 
 
@@ -96,36 +130,42 @@ public class CategoryController {
     }
 
     @PostMapping("/categories/{idCaT}/edit")
-    public String categoryUpdate(@PathVariable(value = "idCaT") long id, @RequestParam String name, @RequestParam String linkPhoto, @RequestParam String description, @RequestParam List<String> dishes, @RequestParam List<String> dishesAdd,  Model model)
+    public String categoryUpdate(@PathVariable(value = "idCaT") long id, @RequestParam(required = false) String name, @RequestParam(required = false) String linkPhoto, @RequestParam(required = false) String description, @RequestParam(required = false) List<String> dishes, @RequestParam(required = false) List<String> dishesAdd,  Model model)
     {
+        System.out.println(name + linkPhoto + description);
+        System.out.println(dishes);
+        System.out.println(dishesAdd);
         Category category = categoryRepository.findById(id).orElseThrow();
         category.setName(name);
         category.setDescription(description);
         category.setLinkPhoto(linkPhoto);
 
+        Category c = categoryRepository.findByName("Вне категорий");
 
-
+        if(dishes != null){
         for (String dishName : dishes) {
 
             Dish dish = dishRepository.findByName(dishName);
-            category.deleteDish(dish);
-            dish.deleteCategory();
-        }
+            //category.deleteDish(dish);
+            dish.setCategory(c); dishRepository.save(dish);
+        }}
 
        // List<Dish> selectedDishes = new ArrayList<>();
-        for (String dishName : dishesAdd) {
+        if(dishesAdd != null) {
+            for (String dishName : dishesAdd) {
 
-            Dish dish = dishRepository.findByName(dishName);
-            category.addDish(dish);
-            dish.setCategory(category);
+                Dish dish = dishRepository.findByName(dishName);
+                // category.addDish(dish);
+                dish.setCategory(category);
+                dishRepository.save(dish);
+            }
         }
-
         //category.setCategories(selectedCategories);
 
 
 
         categoryRepository.save(category);
-        return "redirect:/categories";
+        return "redirect:/categories/{idCaT}";
     }
 
     @PostMapping("/categories/{idCat}/remove")
@@ -134,9 +174,11 @@ public class CategoryController {
 
         Category category = categoryRepository.findById(id).orElseThrow();
 
+        Category c = categoryRepository.findByName("Вне категорий");
+
         Iterable<Dish> dishes = dishRepository.findAll();
         for(Dish dish: dishes){
-            if(dish.getCategory().equals(category)) dishRepository.delete(dish);
+            if(dish.getCategory().equals(category)) {dish.setCategory(c); dishRepository.save(dish);}
         }
 
         categoryRepository.delete(category);

@@ -24,6 +24,8 @@
         </div>
     </section>
 
+    <div th:insert="~{cafe/filter-bar-cafe :: filter-bar}"></div>
+
     <div class="album py-5 bg-body-tertiary">
         <div class="container">
 
@@ -47,9 +49,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     </div>
@@ -57,6 +56,17 @@
 </main>
 
 <div th:insert="~{blocks/footer :: footer}"></div>
+
+<script>
+    document.querySelector('#search-button').addEventListener('click', function() {
+       // var searchInput = document.querySelector('#search-input').value;
+        //history.pushState(null, null, '?name=' + searchInput);
+        var f = document.querySelector('#slider-1').value;
+        var s = document.querySelector('#slider-2').value;
+        history.pushState(null, null, '?f=' + f + '&s=' + s);
+        location.reload();
+    });
+</script>
 
 </body>
 </html>

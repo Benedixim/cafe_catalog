@@ -7,18 +7,18 @@ import com.example.traineejava.repo.CafeRepository;
 import com.example.traineejava.repo.CategoryRepository;
 import com.example.traineejava.repo.DishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping(value = "/cafes")
 public class CafeController {
 
     @Autowired
@@ -31,55 +31,69 @@ public class CafeController {
     private DishRepository dishRepository;
 
 
-    @GetMapping("/")
-    public String Main(Model model)
+    @GetMapping("")
+    public String cafeMain(@RequestParam(required = false) String name, @RequestParam(required = false) String f, @RequestParam(required = false) String s, Model model)
     {
-        Iterable<Cafe> cafes = cafeRepository.findAll(); //массив всех данных полученные из таблички Post
+        Iterable<Cafe> cafes;
+        if(name != null ){
+            if(name.equals("")) cafes = cafeRepository.findAll();
+            else cafes = cafeRepository.findByName(name);
+        }
+        else if(f != null && s != null){
+            cafes = cafeRepository.findByRatingBetween(Float.parseFloat(f),Float.parseFloat(s));
+        }
+        else {
+            cafes = cafeRepository.findAll(); //массив всех данных полученные из таблички Post
+        }
         model.addAttribute("posts", cafes);//передаем в шаблон
         return "cafe/cafe-main";
     }
 
-
-    @GetMapping("/cafes")
-    public String cafeMain(Model model)
-    {
-
-        Iterable<Cafe> cafes = cafeRepository.findAll(); //массив всех данных полученные из таблички Post
-        model.addAttribute("posts", cafes);//передаем в шаблон
-        return "cafe/cafe-main";
-    }
-
-    @GetMapping("/cafes/add")
+    @GetMapping("/add")
     public String cafeAdd(Model model)
     {
         return "cafe/cafe-add";
     }
 
-    @PostMapping("/cafes/add")
-    public String cafePostAdd(@RequestParam String name, @RequestParam String description, @RequestParam String link, @RequestParam String address, Model model)
+    @PostMapping(value = "/add")
+    public String cafePostAdd(@RequestParam String description, @RequestParam String link, @RequestParam String name, @RequestParam String address, Model model)
     {
         Cafe cafe = new Cafe( description, link, name, address);
         cafeRepository.save(cafe);
         return "redirect:/cafes";
     }
 
-    @GetMapping("/cafes/{idCafe}")
+    @GetMapping("/{idCafe}")
     public String cafeDetails(@PathVariable(value = "idCafe") long idCafe, Model model)
     {
         if(!cafeRepository.existsById(idCafe)){
             return "redirect:/cafes";
         }
         Optional<Cafe> cafeOptional = cafeRepository.findById(idCafe);
+        //Iterable<Dish> dishesToDelete;
         if (cafeOptional.isPresent()) {
             Cafe cafe = cafeOptional.get();
             cafe.oneMore(); // увеличиваем число просмотров на 1
             cafeRepository.save(cafe); // сохраняем изменения в репозитории
+
+
+            Iterable<Dish> dishesHave = cafe.getDishes();
+            model.addAttribute("dishesHave", dishesHave);//передаем в шаблон
+
+            List<Category> categoryList = new ArrayList<>();
+            Category c = new Category();
+            for (Dish d: dishesHave){
+                c = dishRepository.findByName(d.getName()).getCategory();
+                if (!categoryList.contains(c)) categoryList.add(c);
+             }
+            model.addAttribute("categories", categoryList);
+
             model.addAttribute("cafe", cafe);
         }
         return "cafe/cafe-details";
     }
 
-    @GetMapping("/cafes/{idCafe}/edit")
+    @GetMapping("/{idCafe}/edit")
     public String cafeEdit(@PathVariable(value = "idCafe") long id, Model model)
     {
 
@@ -94,15 +108,27 @@ public class CafeController {
         model.addAttribute("cafe", res);
 
 
+        List<Dish> dishesHave = cafe.get().getDishes();
+        model.addAttribute("dishesHave", dishesHave);//передаем в шаблон
+
+
         Iterable<Dish> dishes = dishRepository.findAll(); //массив всех данных полученные из таблички Post
-        model.addAttribute("dishes", dishes);//передаем в шаблон
+        List<Dish> dishesAdd = new ArrayList<>();
+        for (Dish d: dishes) {
+            if(!dishesHave.contains(d)) dishesAdd.add(d);
+        }
+        model.addAttribute("dishesAdd", dishesAdd);//передаем в шаблон
+
+
+
+
 
 
         return "cafe/cafe-edit";
     }
 
-    @PostMapping("/cafes/{idCafe}/edit")
-    public String cafeUpdate(@PathVariable(value = "idCafe") long id, @RequestParam String name, @RequestParam String address, @RequestParam float rating, @RequestParam String linkPhoto, @RequestParam String description, @RequestParam List<String> dishesAdd, @RequestParam List<String> dishesDel, @RequestParam List<String> categoriesDel, Model model)
+    @PostMapping("/{idCafe}/edit")
+    public String cafeUpdate(@PathVariable(value = "idCafe") long id, @RequestParam(required = false) String name, @RequestParam(required = false) String address, @RequestParam(required = false) float rating, @RequestParam(required = false) String linkPhoto, @RequestParam(required = false) String description, @RequestParam(required = false) List<String> dishesAdd, @RequestParam(required = false) List<String> dishesDel, @RequestParam(required = false) List<String> categoriesDel, Model model)
     {
         Cafe cafe = cafeRepository.findById(id).orElseThrow();
         cafe.setName(name);
@@ -113,43 +139,34 @@ public class CafeController {
 
 
        // List<Category> selectedCategories = new ArrayList<>();
-
+        if(dishesAdd != null){
         for (String dishName : dishesAdd) {
-            if(dishName==null) break;
+
             Dish dish = dishRepository.findByName(dishName);
-            dish.addCafe(cafe);
-            dishRepository.save(dish);
-
-            Category category = categoryRepository.findByName(dish.getCategory().getName());
-            category.addCafe(cafe);
-            categoryRepository.save(category);
-
             cafe.addDish(dish);
-            cafe.addCategory(dish.getCategory());
+//            cafe.addCategory(dish.getCategory());
 
 
-        }
+        }}
 
-
+        if(dishesDel != null){
         for (String dishName: dishesDel){
             if(dishName==null) break;
             Dish dish = dishRepository.findByName(dishName);
-            dish.delCafe(cafe);
-            dishRepository.save(dish);
-
             cafe.delDish(dish);
 
-        }
+        }}
 
-        for (String categoryName: categoriesDel ){
-            if(categoryName==null) break;
-            Category category = categoryRepository.findByName(categoryName);
-            category.deleteCafe(cafe);
-            categoryRepository.save(category);
-
-            cafe.delCategory(category);
-
-        }
+//        if(categoriesDel != null){
+//        for (String categoryName: categoriesDel ){
+//            if(categoryName==null) break;
+//            Category category = categoryRepository.findByName(categoryName);
+//            category.deleteCafe(cafe);
+//            categoryRepository.save(category);
+//
+//            cafe.delCategory(category);
+//
+//        }}
 
       //  cafe.setCategories(selectedCategories);
 
@@ -159,41 +176,26 @@ public class CafeController {
         return "redirect:/cafes/{idCafe}";
     }
 
-    @PostMapping("/cafes/{id}/remove")
+    @PostMapping("/{id}/remove")
     public String cafeDelete(@PathVariable(value = "id") long id, Model model)
     {
         Cafe cafe = cafeRepository.findById(id).orElseThrow();
 
 
-        Iterable<Category> categories = categoryRepository.findAll(); //массив всех данных полученные из таблички Post
-        for (Category category : categories) {
-            boolean hasCafesInCategory = false;
-            for (Cafe caf : category.getCafes()) {
-                    if (cafe == caf) {
-                        hasCafesInCategory = true;
-                        break;
-                    }
-            }
-            if (hasCafesInCategory) {
-                category.getCafes().remove(cafe);
-            }
-            categoryRepository.save(category);
-        }
-
-        Iterable<Dish> dishes = dishRepository.findAll(); //массив всех данных полученные из таблички Post
-        for (Dish dish : dishes) {
-            boolean hasCafesInDishes = false;
-            for (Cafe caf : dish.getCafes()) {
-                if (cafe == caf) {
-                    hasCafesInDishes = true;
-                    break;
-                }
-            }
-            if (hasCafesInDishes) {
-                dish.getCafes().remove(cafe);
-            }
-            dishRepository.save(dish);
-        }
+//        Iterable<Category> categories = categoryRepository.findAll(); //массив всех данных полученные из таблички Post
+//        for (Category category : categories) {
+//            boolean hasCafesInCategory = false;
+//            for (Cafe caf : category.getCafes()) {
+//                    if (cafe == caf) {
+//                        hasCafesInCategory = true;
+//                        break;
+//                    }
+//            }
+//            if (hasCafesInCategory) {
+//                category.getCafes().remove(cafe);
+//            }
+//            categoryRepository.save(category);
+//        }
 
         cafeRepository.delete(cafe);
 

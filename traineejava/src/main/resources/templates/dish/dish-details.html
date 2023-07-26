@@ -21,7 +21,7 @@
         </strong>
         <!--                <small class="d-inline-block mb-2 text-primary-emphasis" style="font-size: small; font-weight: bold; float: right;" th:text="${el.views} + ' (◕‿◕)'"></small>-->
       </div>
-      <h6 style="font-weight: 800;" th:text="'Категория – ' + ${el.category.getName()}"/>
+     <a th:href="'/categories/' + ${el.getCategory().getIdCaT()}"> <h6 style="font-weight: 800;" th:text="'Категория – ' + ${el.category.getName()}"/></a>
       <p class="lead" th:text="${el.description}"></p>
       <div class="d-grid gap-2 d-md-flex justify-content-md-start">
         <a th:href="'/dishes/' + ${el.idDish} +'/edit'" class="btn btn-primary btn-lg px-4 me-md-2" style="margin-right: 1.5rem!important;">Редактировать</a>
@@ -52,7 +52,7 @@
         <div class="card-body">
           <div class="row">
 
-            <div class="col-lg-4" style="direction: ltr;" th:each="cafe : ${el.getCafes()}">
+            <div class="col-lg-4" style="direction: ltr;" th:each="cafe : ${cafes}">
               <img class="bd-placeholder-img rounded-circle" width="140" height="140" th:src="${cafe.linkPhoto}" role="img" aria-label="Заполнитель" preserveAspectRatio="xMidYMid slice" focusable="false" _mstaria-label="177515" _mstHash="37"><title _mstTextHash="1858532" _mstHash="38">Заполнитель</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></img>
               <h2 class="fw-normal" _msttexthash="15588469" _msthash="39" th:text="${cafe.name}"></h2>
               <p _msttexthash="573562691" _msthash="40" th:text="${cafe.description}"></p>

@@ -1,0 +1,117 @@
+<div class="container" th:fragment = "filter-bar" >
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary rounded" aria-label="Одиннадцатый пример навигационной панели" _mstaria-label="492297" _msthash="110">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#" _msttexthash="4279301" _msthash="111">Фильтры</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample09" aria-controls="navbarsExample09" aria-expanded="false" aria-label="Toggle navigation" _msthidden="A" _mstaria-label="320099" _msthash="112">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExample09">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+        <li class="nav-item">
+
+        </li>
+        <li class="nav-item">
+        </li>
+
+
+      </ul>
+
+
+        <input class="form-control" id="search-input" type="search" placeholder="Поиск по названию" aria-label="Поиск по названию" _mstplaceholder="74607" _msthash="120" _mstaria-label="74607">
+
+
+        <div class="cont">
+            <div class="values">
+
+                <span id="range1">
+                    0
+                </span>
+              <span> &dash; </span>
+              <span id="range2">
+                    5
+                </span>
+              <span>
+                ☆
+              </span>
+              <br>
+              <small style="font-size: 10px;    position: relative; bottom: 20px!important;"> rating  </small>
+            </div>
+
+
+
+            <div style="width: 100%; min-width: 300px;    position: relative; bottom: 25px;">
+              <div class="slider-track"></div>
+              <input type="range" min="0" max="5" value="0" step="0.1" id="slider-1" oninput="slideOne()">
+              <input type="range" min="0" max="5" value="5" step="0.1" id="slider-2" oninput="slideTwo()">
+            </div>
+        </div>
+
+        <div class="d-lg-flex col-lg-3 justify-content-lg-end">
+
+
+
+          <button id="search-button" class="btn btn-sm btn-outline-secondary" style="color: black!important;">Применить</button>
+
+        </div>
+
+
+
+
+
+
+
+
+
+    </div>
+  </div>
+</nav>
+  <br><br>
+  <script>
+    window.onload = function(){
+      slideOne();
+      slideTwo();
+    }
+
+
+
+    let sliderOne = document.getElementById("slider-1");
+
+    let cont = document.getElementById("cont");
+
+    sliderOne.onchange = function (){
+        cont.bottom = 50;
+    }
+
+    let sliderTwo = document.getElementById("slider-2");
+    let displayValOne = document.getElementById("range1");
+    let displayValTwo = document.getElementById("range2");
+    let minGap = 0.5;
+    let sliderTrack = document.querySelector(".slider-track");
+    let sliderMaxValue = document.getElementById("slider-1").max;
+
+    function slideOne(){
+      if(parseFloat(sliderTwo.value) - parseFloat(sliderOne.value) <= minGap){
+        sliderOne.value = parseFloat(sliderTwo.value) - minGap;
+      }
+      displayValOne.textContent = sliderOne.value;
+      fillColor();
+    }
+    function slideTwo(){
+      if(parseFloat(sliderTwo.value) - parseFloat(sliderOne.value) <= minGap){
+        sliderTwo.value = parseFloat(sliderOne.value) + minGap;
+      }
+      displayValTwo.textContent = sliderTwo.value;
+      fillColor();
+    }
+    function fillColor(){
+      percent1 = (sliderOne.value / sliderMaxValue) * 100;
+      percent2 = (sliderTwo.value / sliderMaxValue) * 100;
+      sliderTrack.style.background = `linear-gradient(to right, #dadae5 ${percent1}% , #3264fe ${percent1}% , #3264fe ${percent2}%, #dadae5 ${percent2}%)`;
+    }
+
+
+  </script>
+</div>

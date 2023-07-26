@@ -39,8 +39,8 @@
 <div class="row g-5">
     <div class = "col-md-9">
       <div id="accordion" th:each="el : ${cafe}">
-                <div class="card" th:each="category : ${el.categories}" th:if="${!category.dishes.isEmpty()}">
-
+                <div class="card" th:each="category : ${categories}" >
+<!--th:if="${!category.dishes.isEmpty()}"-->
                       <div class="card-header" id="headingOne">
                         <h5 class="mb-0" >
                   <!--        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">-->
@@ -56,8 +56,9 @@
                         <div class="card-body">
                           <div class="row" >
 
-                            <div class="col-lg-4" style="direction: ltr;" th:each="dish : ${el.dishes}" th:if="${dish.category.idCaT == category.idCaT}">
-                                <!-- Проверяем, принадлежит ли блюдо к текущей категории -->
+                            <div class="col-lg-4" style="direction: ltr;" th:each="dish : ${dishesHave}"  th:if="${category.equals(dish.getCategory())}">
+
+                                <!-- Проверка, принадлежит ли блюдо к текущей категории -->
 
                                   <img style="border: 2px solid black;" class="bd-placeholder-img rounded-circle" width="140" height="140" th:src="${dish.linkPhoto}" role="img" aria-label="Заполнитель" preserveAspectRatio="xMidYMid slice" focusable="false" _mstaria-label="177515" _mstHash="27"><title _mstTextHash="1858532" _mstHash="28">Заполнитель</title><rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect></img>
                                   <h2 class="fw-normal" _msttexthash="632489" _msthash="29" th:text="${dish.name}"></h2>
@@ -81,11 +82,11 @@
 
 
             <div th:each="el : ${cafe}">
-
-                <h4 class="fst-italic" _msttexthash="3931239" _msthash="120" th:if="${!el.categories.isEmpty()}" >Категории</h4>
-
+                <h4 th:if="${not #lists.isEmpty(categories)}" class="fst-italic">Категории</h4>
+<!--                <h4 th:if="categories.isNotEmpty" class="fst-italic" _msttexthash="3931239" _msthash="120"  >Категории</h4>-->
+<!--th:if="${!el.categories.isEmpty()}"-->
                 <ul class="list-unstyled" >
-                    <li th:each="category : ${el.categories}" >
+                    <li th:each="category : ${categories}" >
                         <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" th:href="'/categories/' + ${category.idCaT}">
                             <img class="bd-placeholder-img" style="width: auto" height="96" th:src="${category.linkPhoto}" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></img>
                             <div class="col-lg-8">

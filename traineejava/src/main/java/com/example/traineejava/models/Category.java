@@ -21,21 +21,8 @@ public class Category {
 
     private String linkPhoto;
 
-    @OneToMany(mappedBy = "category")
-    private List<Dish> dishes;
-
-    @ManyToMany
-    private List<Cafe> cafes;
-
     // остальные поля, конструкторы и методы
 
-    public List<Cafe> getCafes() {
-        return cafes;
-    }
-
-    public void setCafes(Cafe cafe) {
-        this.cafes.add(cafe);
-    }
 
     public Long getIdCaT() {
         return idCaT;
@@ -69,15 +56,6 @@ public class Category {
         this.linkPhoto = linkPhoto;
     }
 
-    public List<Dish> getDishes() {
-        return dishes;
-    }
-
-    public void setDishes(List<Dish> dishes) {
-        this.dishes = dishes;
-    }
-
-
     public Category() {
     }
 
@@ -87,28 +65,10 @@ public class Category {
         this.linkPhoto = linkPhoto;
     }
 
-
-    public void addCafe(Cafe cafe) {
-        if(!cafes.contains(cafe)) cafes.add(cafe);
-    }
-
-    public void deleteDish(Dish dish) {
-       if(dishes.contains(dish)) dishes.remove(dish);
-    }
-
-    public void addDish(Dish dish) {
-        if(!dishes.contains(dish)) dishes.add(dish);
-    }
-
-    public void deleteCafe(Cafe cafe) {
-        if(cafes.contains(cafe)) cafes.remove(cafe);
-    }
-
     @Override
     public String toString() {
         return "Category{" +
                 " name='" + name + '\'' +
-                " dishes'" + dishes.toString() + '\'' +
                 '}';
     }
 

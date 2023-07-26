@@ -72,6 +72,10 @@ public class DishController {
         ArrayList<Dish> res = new ArrayList<>();
         dish.ifPresent(res::add);
         model.addAttribute("dish", res);
+
+        Iterable<Cafe> cafes = cafeRepository.findByDishesContains(dish.get()); //массив всех данных полученные из таблички Post
+        model.addAttribute("cafes", cafes);//передаем в шаблон
+
         return "dish/dish-details";
     }
 
@@ -94,6 +98,9 @@ public class DishController {
 
         Iterable<Category> categories = categoryRepository.findAll(); //массив всех данных полученные из таблички Post
         model.addAttribute("categories", categories);//передаем в шаблон
+
+        Iterable<Cafe> cafes = cafeRepository.findByDishesContains(dish.get()); //массив всех данных полученные из таблички Post
+        model.addAttribute("cafes", cafes);//передаем в шаблон
 
 
         return "dish/dish-edit";
@@ -120,36 +127,15 @@ public class DishController {
     public String dishDelete(@PathVariable(value = "id") long id, Model model)
     {
         Dish dish = dishRepository.findById(id).orElseThrow();
-        dishRepository.delete(dish);
-
-        Iterable<Cafe> cafes = cafeRepository.findAll(); //массив всех данных полученные из таблички Post
-
-        for (Cafe cafe : cafes) {
-            List<Category> categoriesToRemove = new ArrayList<>();
-            List<Cafe> cafesToRemove = new ArrayList<>();
-
-            for (Category category : cafe.getCategories()) {
-                boolean hasDishes = false;
-
-                for (Dish d : cafe.getDishes()) {
-                    if (category == d.getCategory()) {
-                        hasDishes = true;
-                        break;
-                    }
-                }
-
-                if (!hasDishes) {
-                    category.getCafes().remove(cafe);
-                    categoryRepository.save(category);
-                    cafesToRemove.add(cafe);
-                }
 
 
-            }
-
-            cafe.getCategories().removeAll(categoriesToRemove);
+        List<Cafe> cafesToRemove = cafeRepository.findByDishesContains(dish);
+        for (Cafe cafe: cafesToRemove){
+            cafe.getDishes().remove(dish);
             cafeRepository.save(cafe);
         }
+
+        dishRepository.delete(dish);
 
         return "redirect:/dishes";
     }

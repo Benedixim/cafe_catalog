@@ -20,8 +20,9 @@ public class Cafe {
 
     private String linkPhoto, name, address;
 
-    @ManyToMany(mappedBy = "cafes")
-    private List<Category> categories;
+    @ManyToMany
+    private List<Dish> dishes;
+
 
     public List<Dish> getDishes() {
         return dishes;
@@ -31,16 +32,6 @@ public class Cafe {
         this.dishes = dishes;
     }
 
-    @ManyToMany(mappedBy = "cafes")
-    private List<Dish> dishes;
-
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
 
     public Long getIdCafe() {
         return idCafe;
@@ -127,16 +118,7 @@ public class Cafe {
 
     }
 
-    public void addCategory(Category category) {
-        if(!categories.contains(category)) categories.add(category);
 
-    }
-
-    public void makeUniqCat(){
-        for (Category category: categories) {
-            if(categories.indexOf(category)!=categories.lastIndexOf(category)) categories.remove(category);
-        }
-    }
 
     public void makeUniqDish(){
         for (Dish dish: dishes) {
@@ -146,25 +128,6 @@ public class Cafe {
 
     public void delDish(Dish dish) { if(dishes.contains(dish)) dishes.remove(dish);    }
 
-    public void checkForEmptyCategories() {
-        boolean a = false;
-        System.out.println(dishes);
-        System.out.println(categories);
-        for (int i =0; i < categories.size(); i++){
-            a = false;
-            for (Dish dish:dishes) {
-                if (categories.get(i) == dish.getCategory()) {
-                    a = true;
-                    break;
-                }
-            }
-            if(!a) this.categories.remove(i);
-        }
-         //categories.removeIf(category -> category.getDishes().isEmpty());
-    }
-    public void delCategory(Category category) {
-        if(categories.contains(category)) categories.remove(category);
-    }
 
     @Override
     public String toString() {

@@ -25,16 +25,8 @@ public class Dish {
     @ManyToOne
     private Category category;
 
-    @ManyToMany
-    private List<Cafe> cafes;
 
-    public List<Cafe> getCafes() {
-        return cafes;
-    }
 
-    public void setCafes(List<Cafe> cafes) {
-        this.cafes = cafes;
-    }
 
     public Long getIdDish() {
         return idDish;
@@ -109,13 +101,7 @@ public class Dish {
         this.category=null;
     }
 
-    public void addCafe(Cafe cafe) {
-        if(!cafes.contains(cafe)) cafes.add(cafe);
-    }
 
-    public void delCafe(Cafe cafe) {
-        if(cafes.contains(cafe)) cafes.remove(cafe);
-    }
 
     @Override
     public String toString() {

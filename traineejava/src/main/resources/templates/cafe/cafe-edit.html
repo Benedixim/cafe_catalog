@@ -18,18 +18,18 @@
 
       <select name="dishesAdd" class="form-control" multiple>
         <option value="" selected disabled>Выберите блюдо для добавления</option>
-        <option th:each="dish : ${dishes}" th:value="${dish.name}" th:text="${dish.name}" th:if="${!el.dishes.contains(dish)}"></option>
+        <option th:each="dish : ${dishesAdd}" th:value="${dish.name}" th:text="${dish.name}" th:if="${!el.dishes.contains(dish)}"></option>
       </select>
 
       <select name="dishesDel" class="form-control" multiple>
         <option value="" selected disabled>Выберите блюдо для удаления</option>
-        <option th:each="dish : ${el.dishes}" th:value="${dish.name}" th:text="${dish.name}"></option>
+        <option th:each="dish : ${dishesHave}" th:value="${dish.name}" th:text="${dish.name}"></option>
       </select>
 
-      <select name="categoriesDel" class="form-control" multiple>
-        <option value="" selected disabled>Выберите категорию для удаления</option>
-        <option th:each="category : ${el.categories}" th:value="${category.name}" th:text="${category.name}"></option>
-      </select>
+<!--      <select name="categoriesDel" class="form-control" multiple>-->
+<!--        <option value="" selected disabled>Выберите категорию для удаления</option>-->
+<!--        <option th:each="category : ${categories}" th:value="${category.name}" th:text="${category.name}"></option>-->
+<!--      </select>-->
 
       <button type = "submit" class="btn btn-success" >Обновить информацию</button>
     </form>
