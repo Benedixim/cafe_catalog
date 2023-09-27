@@ -4,13 +4,15 @@
 
 <body>
 
-<header th:insert="~{blocks/header :: header}"></header>
 
 
 
+<div th:insert="~{blocks/side-bar :: side-bar}"></div>
 
 
-<main>
+<main style="margin-left: 4.5rem; ">
+
+        <header th:insert="~{blocks/header :: header}"></header>
 
     <section class="py-5 text-center container">
         <div class="row py-lg-5">

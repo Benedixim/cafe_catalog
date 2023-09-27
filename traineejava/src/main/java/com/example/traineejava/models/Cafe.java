@@ -1,7 +1,11 @@
 package com.example.traineejava.models;
 
+import com.fasterxml.jackson.databind.util.ArrayIterator;
 import jakarta.persistence.*;
 
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -20,9 +24,64 @@ public class Cafe {
 
     private String linkPhoto, name, address;
 
+    private float money;
+
+    private Time open, close;
+
     @ManyToMany
     private List<Dish> dishes;
 
+    public static Iterable<Cafe> returnCommon(List<Cafe> nowDishesContains, List<Cafe> addDishesContains) {
+
+        nowDishesContains.removeIf(cafe -> !addDishesContains.contains(cafe));
+        return nowDishesContains;
+    }
+
+    public static List<Cafe> cafesToRemove(List<Cafe> cafes, List<Dish> dishList) {
+        List<Cafe> cafesToRemove = new ArrayList<>();
+
+        for (Cafe cafe: cafes){
+
+            boolean a = false;
+            for(Dish dish: dishList) {
+                if (cafe.getDishes().contains(dish)) {a = true; break;}
+            }
+            if (!a) cafesToRemove.add(cafe);
+        }
+
+        return cafesToRemove;
+    }
+
+    public void updateMoney(){
+        for(Dish dish: dishes){
+            this.money += dish.getPrice();
+        }
+        this.money /= this.dishes.size();
+    }
+
+    public float getMoney() {
+        return money;
+    }
+
+    public void setMoney(float money) {
+        this.money = money;
+    }
+
+    public Time getOpen() {
+        return open;
+    }
+
+    public void setOpen(Time open) {
+        this.open = open;
+    }
+
+    public Time getClose() {
+        return close;
+    }
+
+    public void setClose(Time close) {
+        this.close = close;
+    }
 
     public List<Dish> getDishes() {
         return dishes;
@@ -134,5 +193,16 @@ public class Cafe {
         return "Cafe{" +
                 " name='" + name + '\'' +
                 '}';
+    }
+
+    public double getAverageDinnerCost(){
+        double sum= 0.0;
+        for(Dish d: dishes)
+        {
+            sum += d.getPrice();
+        }
+        sum /= dishes.size();
+        return sum;
+
     }
 }

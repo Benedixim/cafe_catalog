@@ -346,7 +346,8 @@ sup {
 
 a {
     color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
-    text-decoration: underline;
+    text-decoration: none!important;
+    /*вася*/
 }
 a:hover {
     --bs-link-color-rgb: var(--bs-link-hover-color-rgb);
@@ -3401,14 +3402,15 @@ textarea.form-control-lg {
     white-space: nowrap;
 }
 .dropdown-toggle::after {
+    margin-top: 7px;
     display: inline-block;
-    margin-left: 0.255em;
+    /*margin-left: 0.255em;вася*/
     vertical-align: 0.255em;
     content: "";
-    border-top: 0.3em solid;
-    border-right: 0.3em solid transparent;
+    border-top: 0.7em solid;
+    border-right: 1em solid transparent;
     border-bottom: 0;
-    border-left: 0.3em solid transparent;
+    border-left: 1em solid transparent;
 }
 .dropdown-toggle:empty::after {
     margin-left: 0;
@@ -3901,7 +3903,12 @@ textarea.form-control-lg {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
     color: var(--bs-nav-pills-link-active-color);
-    background-color: var(--bs-nav-pills-link-active-bg);
+    border-top: 2px solid black!important;
+    border-bottom: 2px solid black!important;
+    /*background-color: #f8f9fa;*/
+    background-color: var(--bs-border-color);
+    /*вася*/
+    /*background-color: var(--bs-nav-pills-link-active-bg);*/
 }
 
 .nav-underline {
@@ -7782,7 +7789,7 @@ textarea.form-control-lg {
     flex-wrap: wrap !important;
 }
 
-.flex-nowrap {
+.flex-nowrap {.nav-pills .nav-link.active
     flex-wrap: nowrap !important;
 }
 

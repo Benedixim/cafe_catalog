@@ -4,13 +4,12 @@
 
 <body>
 
-<header th:insert="~{blocks/header :: header}"></header>
+<div th:insert="~{blocks/side-bar :: side-bar}"></div>
 
 
+<main style="margin-left: 4.5rem; ">
+    <header th:insert="~{blocks/header :: header}"></header>
 
-
-
-<main>
 
   <section class="py-5 text-center container">
     <div class="row py-lg-5">
@@ -43,7 +42,7 @@
                   <a  th:href="'/dishes/' + ${el.idDish}"  class="btn btn-sm btn-outline-secondary">View</a>
                   <a  class="btn btn-sm btn-outline-secondary" th:href="'/dishes/' + ${el.idDish} + '/edit'">Edit</a>
                 </div>
-                <small class="text-body-secondary" th:text="${el.price} + '$'"></small>
+                <small class="text-body-secondary" th:text="'~' + ${el.price} + '$'"></small>
               </div>
             </div>
           </div>

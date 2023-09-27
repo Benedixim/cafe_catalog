@@ -35,9 +35,13 @@ public class CafeController {
     public String cafeMain(@RequestParam(required = false) String name, @RequestParam(required = false) String f, @RequestParam(required = false) String s, Model model)
     {
         Iterable<Cafe> cafes;
-        if(name != null ){
-            if(name.equals("")) cafes = cafeRepository.findAll();
-            else cafes = cafeRepository.findByName(name);
+        if(name != null && !name.isEmpty()){
+            if(f != null && s != null){
+                cafes = cafeRepository.findByNameContainingIgnoreCaseAndRatingBetween(name, Float.parseFloat(f), Float.parseFloat(s));
+            }
+            else{
+                cafes = cafeRepository.findByNameContainingIgnoreCase(name);
+            }
         }
         else if(f != null && s != null){
             cafes = cafeRepository.findByRatingBetween(Float.parseFloat(f),Float.parseFloat(s));
@@ -156,6 +160,8 @@ public class CafeController {
             cafe.delDish(dish);
 
         }}
+
+        cafe.updateMoney();
 
 //        if(categoriesDel != null){
 //        for (String categoryName: categoriesDel ){

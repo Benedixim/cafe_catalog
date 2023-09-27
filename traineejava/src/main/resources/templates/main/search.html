@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Search</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link href="https://fonts.googleapis.com/css?family=Karla:400,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.8.95/css/materialdesignicons.min.css">
+<!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">-->
+  <link href="/css/bootstrap.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/zamzar.css">
+  <link rel="stylesheet" href="/css/moneyRange.css">
+</head>
+<body>
+
+<div th:insert="~{blocks/side-bar :: side-bar}"></div>
+<main style="margin-left: 4.5rem;">
+  <header th:insert="~{blocks/header :: header}"></header>
+
+
+  <div class="container" >
+    <form action = "/search" method="post">
+
+    <div id="wizard">
+      <h3>
+        <div class="media">
+          <div class="bd-wizard-step-icon"><i class="mdi mdi-account-outline"></i></div>
+          <div class="media-body">
+            <div class="bd-wizard-step-title">Категория еды</div>
+            <div class="bd-wizard-step-subtitle">Шаг 1</div>
+          </div>
+        </div>
+      </h3>
+      <section>
+        <div class="content-wrapper">
+          <h4 class="section-heading">Выберите категории поиска </h4>
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="categoryChoice1" class="sr-only"></label>
+              <select id="categoryChoice1" name="categoryChoice" class="form-control">
+                <option value="" selected disabled>Категория 1</option>
+                <option th:each="cat : ${categories}" th:value="${cat.name}" th:text="${cat.name}"></option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="categoryChoice2" class="sr-only"></label>
+            <select id="categoryChoice2" name="categoryChoice2" class="form-control">
+              <option value="" selected disabled>Категория 2</option>
+              <option th:each="cat : ${categories}" th:value="${cat.name}" th:text="${cat.name}"></option>
+            </select>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="categoryChoice3" class="sr-only"></label>
+              <select id="categoryChoice3" name="categoryChoice3" class="form-control">
+                <option value="" selected disabled>Категория 3</option>
+                <option th:each="cat : ${categories}" th:value="${cat.name}" th:text="${cat.name}"></option>
+              </select>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="categoryChoice4" class="sr-only"></label>
+              <select id="categoryChoice4" name="categoryChoice4" class="form-control">
+                <option value="" selected disabled>Категория 4</option>
+                <option th:each="cat : ${categories}" th:value="${cat.name}" th:text="${cat.name}"></option>
+              </select>
+            </div>
+
+            <!--<div class="form-group col-md-6">
+              <label for="lastName" class="sr-only"></label>
+              <input type="text" name="lastName" id="lastName" class="form-control" placeholder="Last Name">
+            </div>-->
+          </div>
+        </div>
+      </section>
+
+      <h3>
+        <div class="media">
+          <div class="bd-wizard-step-icon"><i class="mdi mdi-bank"></i></div>
+          <div class="media-body">
+            <div class="bd-wizard-step-title">Время работы</div>
+            <div class="bd-wizard-step-subtitle">Шаг 2</div>
+          </div>
+        </div>
+      </h3>
+      <section>
+        <div class="content-wrapper">
+          <h4 class="section-heading" style="margin-bottom: 60px;">Введите время посещения </h4>
+          <div class="row">
+
+
+
+
+            <div class="form-group col-md-6" style="display: grid;">
+              <label for="categoryChoice4" class="sr-only"></label>
+              <input type="time" name="time1" id="time1" min="00.00" style="font-size: 400%; border-color:  #00FF00; background-color: #00d69f;    padding: 10px;    border-radius: 10px;" th:value="${#dates.format(#dates.createNow(), 'HH:mm')}">
+              <h5 class="font-weight-bold" style="text-align: center; color:  #00d69f;">От</h5>
+            </div>
+
+
+
+
+            <div class="form-group col-md-6" style="display: grid;">
+              <label for="categoryChoice4" class="sr-only"></label>
+              <input type="time" name="time2" id="time2" min="00.00" style="font-size: 400%;  border-color: #FF0000; background-color: deeppink;   padding: 10px;    border-radius: 10px;" th:value="${#dates.format(#dates.createNow(), 'HH:mm')}">
+              <h5 class="font-weight-bold" style="text-align: center; color:  deeppink">До</h5>
+
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <h3>
+        <div class="media">
+          <div class="bd-wizard-step-icon"><i class="mdi mdi-account-check-outline"></i></div>
+          <div class="media-body">
+            <div class="bd-wizard-step-title">Уровень цен</div>
+            <div class="bd-wizard-step-subtitle">Шаг 3</div>
+          </div>
+        </div>
+      </h3>
+      <section>
+
+
+
+
+
+
+          <div class="content-wrapper">
+            <h4 class="section-heading mb-5">Введите диапазон цен</h4>
+
+            <div class="form-group col-md-6" style="display: grid;">
+          <input type="range" name="money" id="range" list="ticks" step="1" max="5" min="1" />
+
+          <datalist id="ticks">
+            <option value="1" label="1-5$"></option>
+            <option value="2" label="5-15$"></option>
+            <option value="3" label="15-30$"></option>
+            <option value="4" label="30-60$"></option>
+            <option value="5" label="60$+"></option>
+          </datalist>
+            </div>
+
+
+          </div>
+
+
+
+
+
+
+
+      </section>
+
+      <h3>
+        <div class="media">
+          <div class="bd-wizard-step-icon"><i class="mdi mdi-emoticon-outline"></i></div>
+          <div class="media-body">
+            <div class="bd-wizard-step-title">Подтверждение</div>
+            <div class="bd-wizard-step-subtitle">Шаг 4</div>
+          </div>
+        </div>
+      </h3>
+      <section>
+
+
+        <div class="content-wrapper">
+          <h4 class="section-heading mb-5">Проверьте введенные данные</h4>
+          <h6 class="font-weight-bold">Категории</h6>
+          <p class="mb-4">
+            <span id="enteredFirstName">Категория 1</span>  <br>
+            <span id="enteredLastName">Категория 2</span> <br>
+            <span id="enteredPhoneNumber">Категория 3</span> <br>
+            <span id="enteredEmailAddress">Категория 4</span></p>
+          <h6 class="font-weight-bold">Время</h6>
+          <p class="mb-4"><span id="enteredDesignation">Примерное время нахождения: </span> <span id="enteredTime1" th:text="${#dates.format(#dates.createNow(), 'HH:mm')}"></span> - <span id="enteredTime2" th:text="${#dates.format(#dates.createNow(), 'HH:mm')}"></span> <br></p>
+
+          <h6 class="font-weight-bold">Деньги</h6>
+          <p class="mb-4"><span>Стоимостный диапазон: </span> <span id="enteredRange"></span> $<br></p>
+
+        </div>
+
+
+
+      </section>
+
+    </div>
+      <button type="submit">Отправить</button>
+    </form>
+  </div>
+
+
+  <div class="album py-5 bg-body-tertiary" th:if="${not #lists.isEmpty(posts)}">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col" th:each="el:${posts}">
+          <div class="card shadow-sm">
+            <img class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="${el.linkPhoto}" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect></img>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0" th:text="${el.name}"></h3>
+                <strong class="d-inline-block mb-2 text-primary-emphasis" style="float: right; margin-bottom: 0!important;" th:text="${el.rating}"></strong>
+              </div>
+              <p class="card-text" th:text="${el.description}"></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a  th:href="'/cafes/' + ${el.idCafe}"  class="btn btn-sm btn-outline-secondary">View</a>
+                  <a  class="btn btn-sm btn-outline-secondary" th:href="'/cafes/' + ${el.idCafe} + '/edit'">Edit</a>
+                </div>
+                <small class="text-body-secondary" th:text="${el.address}"></small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</main>
+
+<script>
+
+    const currentTime = new Date();
+
+    // Format current time to "hh:mm" format
+    const formattedTime = `${('0' + currentTime.getHours()).slice(-2)}:${('0' + currentTime.getMinutes()).slice(-2)}`;
+    document.getElementById('time').value = formattedTime;
+    document.getElementById('time').min = formattedTime;
+</script>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="/js/jquery.steps.min.js"></script>
+<script src="/js/bd-wizard.js"></script>
+</body>
+</html>

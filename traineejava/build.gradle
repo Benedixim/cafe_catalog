@@ -21,9 +21,21 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
+	implementation 'org.springframework.data:spring-data-jpa:3.1.4'
 
 	implementation 'org.springframework.boot:spring-boot-starter-json'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'org.projectlombok:lombok:1.18.26'
+	implementation 'org.projectlombok:lombok:1.18.26'
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+//  Temporary explicit version to fix Thymeleaf bug
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+    implementation 'org.springframework.security:spring-security-test'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.projectlombok:lombok:1.18.26'
+	implementation 'org.projectlombok:lombok:1.18.26'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
