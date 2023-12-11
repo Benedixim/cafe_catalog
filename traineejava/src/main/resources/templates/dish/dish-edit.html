@@ -3,7 +3,7 @@
 <head th:insert="~{blocks/head :: head}"></head>
 
 <body>
-
+<div th:insert="~{blocks/side-bar :: side-bar}"></div>
 <header th:insert="~{blocks/header :: header}"></header>
 
 
@@ -25,7 +25,52 @@
     <textarea  name="description" placeholder="Введите описание блюда" class="form-control" th:text="${el.description}"/><br>
     <button type = "submit" class="btn btn-success" >Обновить блюдо</button>
   </form>
+
+
+
+<div class="container mt-5 mb-5">
+  <h2>Добавление рецепта</h2>
+  <div >
+    <form th:action="'/dishes/' + ${el.getIdDish()} + '/edit/add-recipe'" method="post" class="form-floating" enctype="multipart/form-data">
+      <div class="form-floating mb-3">
+        <input type="text" name="name" class="form-control" id="floatingName" placeholder="Название">
+        <label for="floatingName">Название</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" name="linkPhoto" class="form-control" id="floatingLinkPhoto" placeholder="Ссылка на фото">
+        <label for="floatingLinkPhoto">Ссылка на фото</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" name="ingredients" class="form-control" id="floatingIngredients" placeholder="Ингредиенты">
+        <label for="floatingIngredients">Ингредиенты</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" name="servings" class="form-control" id="floatingServings" placeholder="Порция">
+        <label for="floatingServings">Порция</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <input type="text" name="author" class="form-control" id="floatingAuthors" placeholder="Порция">
+        <label for="floatingServings">Автор</label>
+      </div>
+
+      <div class="form-floating mb-3">
+        <textarea class="form-control" name="instructions" id="floatingInstructions" placeholder="Инструкции" style="height: 100px"></textarea>
+        <label for="floatingInstructions">Инструкции</label>
+      </div>
+      <br>
+
+      <div style="display: flex; justify-content: center;">
+        <button type="submit" class="btn btn-success btn-lg" style="padding-left: 10em; padding-right: 10em;">Добавить рецепт</button>
+      </div>
+    </form>
   </div>
+</div>
+
+</div>
 </div>
 
 <div th:insert="~{blocks/footer :: footer}"></div>

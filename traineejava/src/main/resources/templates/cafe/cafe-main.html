@@ -44,7 +44,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h3 class="mb-0" th:text="${el.name}"></h3>
-                                <strong class="d-inline-block mb-2 text-primary-emphasis" style="float: right; margin-bottom: 0!important;" th:text="${el.rating}"></strong>
+                                <strong class="d-inline-block mb-2 text-primary-emphasis" style="float: right; margin-bottom: 0!important;" th:text="${el.getRating()}"></strong>
                             </div>
                             <p class="card-text" th:text="${el.description}"></p>
                             <div class="d-flex justify-content-between align-items-center">

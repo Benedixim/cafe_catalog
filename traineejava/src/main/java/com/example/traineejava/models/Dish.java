@@ -25,8 +25,31 @@ public class Dish {
     @ManyToOne
     private Category category;
 
+    private float fat, carbon, protein;
 
+    public float getFat() {
+        return fat;
+    }
 
+    public void setFat(float fat) {
+        this.fat = fat;
+    }
+
+    public float getCarbon() {
+        return carbon;
+    }
+
+    public void setCarbon(float carbon) {
+        this.carbon = carbon;
+    }
+
+    public float getProtein() {
+        return protein;
+    }
+
+    public void setProtein(float protein) {
+        this.protein = protein;
+    }
 
     public Long getIdDish() {
         return idDish;

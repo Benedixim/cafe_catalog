@@ -3,6 +3,8 @@ package com.example.traineejava.models;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,8 +21,11 @@ public class Cafe {
     @Column(columnDefinition="varchar(1000)")
     private java.lang.String description;
 
+    @OneToOne
+    private Rating rating;
+
     private int views;
-    private float rating;
+    //private float rating;
 
     private String linkPhoto, name, address;
 
@@ -109,10 +114,46 @@ public class Cafe {
     }
 
     public float getRating() {
-        return rating;
+        if(rating==null) return 0;
+        return rating.getRating();
     }
 
-    public void setRating(float rating) {
+    public float getAtmosphere() {
+        if(rating==null) return 0;
+        return rating.getAtmosphere();
+    }
+
+    public float getCookery() {
+        if(rating==null) return 0;
+        return rating.getCookery();
+    }
+
+    public float getService() {
+        if(rating==null) return 0;
+        return rating.getService();
+    }
+
+    public float getStaff() {
+        if(rating==null) return 0;
+        return rating.getStaff();
+    }
+
+    public float getPrice() {
+        if(rating==null) return 0;
+        return rating.getPrice();
+    }
+
+    public void setRating(Rating rating, int count) {
+        //if(this.rating==null) this.initRating(new Rating());
+        this.rating.setRating((this.rating.getRating() * count + rating.getRating())/(count+1));
+        this.rating.setService((this.rating.getService() * count + rating.getService())/(count+1));
+        this.rating.setStaff((this.rating.getStaff() * count + rating.getStaff())/(count+1));
+        this.rating.setPrice((this.rating.getPrice() * count + rating.getPrice())/(count+1));
+        this.rating.setAtmosphere((this.rating.getAtmosphere() * count + rating.getAtmosphere())/(count+1));
+        this.rating.setCookery((this.rating.getCookery() * count + rating.getCookery())/(count+1));
+    }
+
+    public void initRating(Rating rating){
         this.rating = rating;
     }
 
@@ -195,14 +236,13 @@ public class Cafe {
                 '}';
     }
 
-    public double getAverageDinnerCost(){
-        double sum= 0.0;
-        for(Dish d: dishes)
-        {
+    public double getAverageDinnerCost() {
+        double sum = 0.0;
+        for (Dish d : dishes) {
             sum += d.getPrice();
         }
-        sum /= dishes.size();
-        return sum;
-
+        double average = sum / dishes.size();
+        BigDecimal roundedAverage = BigDecimal.valueOf(average).setScale(2, RoundingMode.HALF_UP);
+        return roundedAverage.doubleValue();
     }
 }

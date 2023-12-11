@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{blocks/head :: head}"></head>
+<body>
+<div th:insert="~{blocks/side-bar :: side-bar}"></div>
+<div th:insert="~{blocks/side-bar :: side-bar}"></div>
+
+
+<main style="margin-left: 4.5rem; ">
+
+
+    <header th:insert="~{blocks/header :: header}"></header>
+
+
+    <div class="container col-xxl-8 px-4 py-5" th:each="el : ${user}" style="padding-bottom: 0!important;">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5" style="padding-bottom: 0!important;">
+            <div class="col-10 col-sm-8 col-lg-6">
+                <img th:src="${el.getProfilePhotoUrl()}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+            </div>
+            <div class="col-lg-6">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3" style="font-weight: 800;" th:text="${el. getFirstName()} + ' ' + ${el.getLastName()}"></h1>
+<!--                    <strong class="d-inline-block mb-2 text-primary-emphasis btn btn-outline-warning" style="font-size: x-large; float: right; display: flex!important; flex-direction: column;!important; padding: 10px!important;" >-->
+<!--                        <strong class="d-inline-block mb-2 text-primary-emphasis" style="font-size: xx-large; font-weight: bold; float: right; margin-bottom: 0!important; min-width: 81px" th:text="${el.getRating()} + ' ☆'"></strong>-->
+
+<!--&lt;!&ndash;                        <small class="d-inline-block mb-2 text-primary-emphasis" style="font-size: x-small; color: black; font-weight: bold; float: right; margin-bottom: 0!important;" th:text="${el.views} + '(◕‿◕)'"></small>&ndash;&gt;-->
+<!--                    </strong>-->
+                    <!--                <small class="d-inline-block mb-2 text-primary-emphasis" style="font-size: small; font-weight: bold; float: right;" th:text="${el.views} + ' (◕‿◕)'"></small>-->
+                </div>
+                <h6 style="font-weight: 800;" id="mapAddress" th:text="${el.getRole()}"></h6>
+<!--                <h6 style="font-weight: 800;" th:text="'Средний чек ' + ${el.getAverageDinnerCost()}"/>-->
+<!--                <p class="lead" th:text="${el.description}"></p>-->
+<!--                <div class="d-grid gap-2 d-md-flex justify-content-md-start">-->
+<!--                    <a th:href="'/cafes/' + ${el.idCafe} +'/edit'" class="btn btn-primary btn-lg px-4 me-md-2" style="margin-right: 1.5rem!important;">Редактировать</a>-->
+<!--                    <form th:action="'/cafes/' + ${el.idCafe} + '/remove'" method="post">-->
+<!--                        <button type="submit" class="btn btn-outline-secondary btn-lg px-4">Удалить</button>-->
+<!--                    </form>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </div>
+
+    <p></p>
+    <div class="container" >
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Rating</th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Cafe</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="comment : ${comments}">
+                <td th:text="${comment.getRating().getRating()}"></td>
+                <td th:text="${comment.getDate()}"></td>
+                <td th:text="${comment.getDescription()}"></td>
+                <td th:text="${comment.getCafe().getName()}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <p></p><p></p>
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Role</th>
+                <th>Photo</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.getFirstName()}"></td>
+                <td th:text="${user.getLastName()}"></td>
+                <td th:text="${user.getEmail()}"></td>
+                <td th:text="${user.getPassword()}"></td>
+                <td th:text="${user.getRole()}"></td>
+                <td>
+                    <img th:src="${user.getProfilePhotoUrl()}" width="100" height="100" alt="User Photo">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+</main>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+
+
+
+</body>
+</html>

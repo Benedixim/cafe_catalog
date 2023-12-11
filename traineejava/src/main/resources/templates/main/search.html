@@ -189,7 +189,38 @@
       </section>
 
     </div>
-      <button type="submit">Отправить</button>
+
+
+        <div class="actions clearfix center" style="background-color: #f2f3f8;">
+          <button type="submit" class="mybutton">Отправить</button>
+        </div>
+
+        <style>
+          .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f2f3f8;
+            /*height: 100vh; !* Высота, чтобы кнопка была посередине страницы *!*/
+          }
+
+          .mybutton {
+            font-family: var(--bs-body-font-family);
+            font-size: var(--bs-body-font-size);
+            line-height: var(--bs-body-line-height);
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            display: inline-block;
+            border-radius: 6px;
+            padding: 16px 30px;
+            font-weight: bold;
+
+            background-color: gold; /* Золотой фоновый цвет */
+            color: var(--bs-white);
+            border-color: gold;
+          }
+        </style>
+
     </form>
   </div>
 

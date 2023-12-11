@@ -3,7 +3,7 @@
 <head th:insert="~{blocks/head :: head}"></head>
 
 <body>
-
+<div th:insert="~{blocks/side-bar :: side-bar}"></div>
 <header th:insert="~{blocks/header :: header}"></header>
 
 <div class="container col-xxl-8 px-4 py-5" th:each="el : ${dish}" style="padding-bottom: 0!important;">
@@ -13,7 +13,7 @@
     </div>
     <div class="col-lg-6">
       <div class="d-flex justify-content-between align-items-center">
-        <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3" style="font-weight: 800;" th:text="${el.name}"></h1>
+        <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3" style="font-weight: 800;" id="name" th:text="${el.name}"></h1>
         <strong class="d-inline-block mb-2 text-primary-emphasis btn btn-outline-warning" style="font-size: x-large; float: right; display: flex!important; flex-direction: column;!important; padding: 10px!important;" >
           <strong class="d-inline-block mb-2 text-primary-emphasis" style="font-size: xx-large; font-weight: bold; float: right; margin-bottom: 0!important;" th:text="'~' + ${el.price} + '$'"></strong>
 
@@ -31,6 +31,26 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="container col-xxl-8 px-4 py-5" style="padding-bottom: 0!important;">
+  <div class="row g-5 py-5" style="padding-bottom: 0!important;">
+    <div class="col-10 col-sm-8 col-lg-6" style="height: 450px;">
+        <canvas id="myChart2"></canvas>
+    </div>
+    <div class="col-lg-6" style="height: 450px;">
+      <canvas id="myChart3"></canvas>
+      <!--<div class="d-grid justify-content-between align-items-center">
+        <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3" style="font-weight: 800;">Порция/Калории</h1>
+        <strong class="d-inline-block mb-2 text-primary-emphasis btn btn-outline-warning" style="font-size: x-large; float: right; display: flex!important; flex-direction: column;!important; padding: 10px!important;">
+          <strong class="d-inline-block mb-2 text-primary-emphasis" style="font-size: xx-large; font-weight: bold; float: right; margin-bottom: 0!important;"><div id="portion"></div> <div id="calories"></div></strong>
+
+        </strong>
+      </div>-->
+
+    </div>
+  </div>
+
 </div>
 
 <!---->
@@ -63,7 +83,180 @@
       </div>
     </div>
 
+    <div class="album py-5 bg-body-tertiary">
+      <div class="container">
 
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+          <div class="col" th:each="rec:${recipes}">
+            <div class="card shadow-sm">
+              <img class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="${rec.getLinkPhoto()}" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect></img>
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h3 class="mb-0" th:text="${rec.getName()}"></h3>
+<!--                  <strong class="d-inline-block mb-2 text-primary-emphasis" style="float: right; margin-bottom: 0!important;" th:text="${el.getRating()}"></strong>-->
+                </div>
+                 <p class="card-text" th:text="${rec.getAuthor()}"></p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+
+                    <a  th:href="'/dishes/' + ${el.getIdDish()} + '/recipes/' + ${rec.getId()}"  class="btn btn-sm btn-outline-secondary">View</a>
+                    <a  class="btn btn-sm btn-outline-secondary" th:href="'/dishes/' + ${el.getIdDish()} + '/recipes/' + ${rec.getId()} + '/edit'">Edit</a>
+                  </div>
+                  <small class="text-body-secondary" th:text="${rec.getServings()}"></small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      const ctx = document.getElementById('myChart');
+      console.log([[${dates}]]);
+
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [[${dates}]],
+          datasets: [{
+            label: 'История цен',
+            //data: [12, 19, 3, 5, 2, 3],
+            data: [[${prices}]],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    </script>
+
+
+    <form method="post" class="form-inline justify-content-between" style="display: flex!important;">
+      <div class="form-group mx-sm-3 mb-2">
+        <input type="number" name="price" placeholder="Введите цену" class="form-control" step="0.01" required>
+      </div>
+      <div class="form-group mx-sm-3 mb-2">
+        <input type="date" id="date" name="date" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-success mb-2">Добавить в историю цен</button>
+    </form>
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+      var query = document.getElementById('name').innerHTML;
+     // var query = '3lb carrots and a chicken sandwich'
+      $.ajax({
+        method: 'GET',
+        url: 'https://api.calorieninjas.com/v1/nutrition?query=' + query,
+        headers: { 'X-Api-Key': '2cQJkmxg0s6h0rG1MU4sQg==xayEUQzCbIAn8tS8'},
+        contentType: 'application/json',
+        success: function(result) {
+          console.log(result);
+          const ctx2 = document.getElementById('myChart2');
+          console.log([[${calories}]]);
+
+          const colors = ['#f8897e', '#7fc7f8', '#fce37f', '#7182f1',
+            '#d37af6','#fa7cd2', '#7efae1',   '#f5b179'];
+
+          //document.getElementById('portion').innerHTML = result.items[0].serving_size_g;
+          //document.getElementById('calories').innerHTML = result.items[0].calories;
+
+
+          new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+              labels: ['Жиры', 'Углеводы', 'Белки', 'Холестерины', 'Пищевые волокна',  'Калий', 'Натрий', 'Сахара'],
+              datasets: [{
+                data: [result.items[0].fat_total_g, result.items[0].carbohydrates_total_g, result.items[0].protein_g, result.items[0].chcholesterol_mg / 1000,  result.items[0].fiber_g, result.items[0].potassium_mg / 1000, result.items[0].sodium_mg / 1000, result.items[0].sugar_g ],
+                backgroundColor: colors.slice(0, 8),
+                hoverBackgroundColor: colors.slice(0, 8),
+              }],
+            },
+          });
+
+
+          const ctx3 = document.getElementById('myChart3');
+
+          //document.getElementById('portion').innerHTML = result.items[0].serving_size_g;
+          //document.getElementById('calories').innerHTML = result.items[0].calories;
+
+
+          new Chart(ctx3, {
+            type: 'bar',
+            data: {
+              labels: ['Порция'],
+              datasets: [{
+                type: 'bar',
+                label: 'Калории',
+                data: [result.items[0].calories],
+                backgroundColor: colors[0],
+                hoverBackgroundColor: colors[0],
+                yAxisID: 'y-axis-1',
+
+              }, {
+                type: 'bar',
+                label: 'Порция',
+                data: [result.items[0].serving_size_g],
+                backgroundColor: colors[1],
+                hoverBackgroundColor: colors[1],
+                yAxisID: 'y-axis-2',
+
+              }]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  id: 'y-axis-1',
+                  type: 'linear',
+                  order: 1,
+                  position: 'left',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Калории'
+                  }
+                }, {
+                  id: 'y-axis-2',
+                  type: 'linear',
+                  order: 2,
+                  position: 'right',
+                  scaleLabel: {
+                    display: true,
+                    labelString: 'Порция'
+                  }
+                }]
+              }
+            }
+          });
+
+
+        },
+        error: function ajaxError(jqXHR) {
+          console.error('Error: ', jqXHR.responseText);
+        }
+      });
+
+
+
+
+
+    </script>
 
 
   </div>

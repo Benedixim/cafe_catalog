@@ -5,7 +5,47 @@
 
 <div th:insert="~{blocks/side-bar :: side-bar}"></div>
 
+<style>
 
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center
+    }
+
+    .rating>input {
+        display: none
+    }
+
+    .rating>label {
+        position: relative;
+        width: 1em;
+        font-size: 30px;
+        font-weight: 300;
+        color: #FFD600;
+        cursor: pointer
+    }
+
+    .rating>label::before {
+        content: "\2605";
+        position: absolute;
+        opacity: 0
+    }
+
+    .rating>label:hover:before,
+    .rating>label:hover~label:before {
+        opacity: 1 !important
+    }
+
+    .rating>input:checked~label:before {
+        opacity: 1
+    }
+
+    .rating:hover>input:checked~label:before {
+        opacity: 0.4
+    }
+
+</style>
 <main style="margin-left: 4.5rem; ">
         <header th:insert="~{blocks/header :: header}"></header>
 
@@ -19,13 +59,13 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3" style="font-weight: 800;" th:text="${el.name}"></h1>
                     <strong class="d-inline-block mb-2 text-primary-emphasis btn btn-outline-warning" style="font-size: x-large; float: right; display: flex!important; flex-direction: column;!important; padding: 10px!important;" >
-                        <strong class="d-inline-block mb-2 text-primary-emphasis" style="font-size: xx-large; font-weight: bold; float: right; margin-bottom: 0!important; min-width: 81px" th:text="${el.rating} + ' ☆'"></strong>
+                        <strong class="d-inline-block mb-2 text-primary-emphasis" style="font-size: xx-large; font-weight: bold; float: right; margin-bottom: 0!important; min-width: 81px" th:text="${el.getRating()} + ' ☆'"></strong>
 
                         <small class="d-inline-block mb-2 text-primary-emphasis" style="font-size: x-small; color: black; font-weight: bold; float: right; margin-bottom: 0!important;" th:text="${el.views} + '(◕‿◕)'"></small>
                     </strong>
     <!--                <small class="d-inline-block mb-2 text-primary-emphasis" style="font-size: small; font-weight: bold; float: right;" th:text="${el.views} + ' (◕‿◕)'"></small>-->
                 </div>
-                <h6 style="font-weight: 800;" th:text="${el.address}"/>
+                <h6 style="font-weight: 800;" id="mapAddress" th:text="${el.address}"></h6>
                 <h6 style="font-weight: 800;" th:text="'Средний чек ' + ${el.getAverageDinnerCost()}"/>
                 <p class="lead" th:text="${el.description}"></p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start">
@@ -93,7 +133,7 @@
                     <ul class="list-unstyled" >
                         <li th:each="category : ${categories}" >
                             <a class="d-flex flex-column flex-lg-row gap-3 align-items-start align-items-lg-center py-3 link-body-emphasis text-decoration-none border-top" th:href="'/categories/' + ${category.idCaT}">
-                                <img class="bd-placeholder-img" style="width: auto" height="96" th:src="${category.linkPhoto}" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></img>
+                                <img class="bd-placeholder-img" style="width: 140px" height="96" th:src="${category.linkPhoto}" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"></rect></img>
                                 <div class="col-lg-8">
                                     <h6 class="mb-0" _msttexthash="7113873" _msthash="121" th:text="${category.name}"></h6>
                                 </div>
@@ -107,8 +147,419 @@
 
             </div>
         </div>
+
+        <!--comments-->
+        <div class="container mt-5">
+            <div class="row g-5">
+                <div class="col-sm-5 col-md-6 col-12 pb-4">
+                    <h1>Comments</h1>
+                    <div class="comment mt-4 text-justify float-left" th:each="comm : ${comments}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                        <img th:src="${comm.getUser().getProfilePhotoUrl()}" alt="" class="rounded-circle" width="40" height="40">
+                        <h4 th:text="${comm.getUser().getFirstName()+comm.getUser().getLastName()}" style="margin-left: 10px; margin-bottom: 0;"></h4>
+                            </div>
+                        <p th:text="${comm.getDate()}" style="margin-top: 0; margin-bottom: 0;"></p>
+                        </div>
+                        <br>
+                        <p th:text="${comm.getDescription()}">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus numquam assumenda hic aliquam vero sequi velit molestias doloremque molestiae dicta?</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label> Атмосфера: <span th:text="${comm.getRating().getAtmosphere()}"></span></label>
+                            <label >Кухня: <span th:text="${comm.getRating().getCookery()}"></span></label>
+                            <label >Цены: <span th:text="${comm.getRating().getPrice()}"></span></label>
+                            <label >Сервис: <span th:text="${comm.getRating().getService()}"></span></label>
+                            <label >Персонал: <span th:text="${comm.getRating().getStaff()}"></span></label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-5 col-sm-4 offset-md-1 offset-sm-1 col-12">
+
+
+
+<!--                    -->
+
+                    <style>
+                        .rating{
+                            display: flex;
+                            align-items: flex-end;
+                            font-size: 40px;
+                            line-height: 0.75;
+                        }
+                        .rating__body{
+                            position: relative;
+                        }
+
+                        .rating__body:before{
+                            content: "★★★★★";
+                            display: block;
+                        }
+                        .rating__active{
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            top: 0;
+                            left: 0;
+                            overflow: hidden;
+                        }
+
+                        .rating__active:before{
+                            content: "★★★★★";
+                            position: absolute;
+                            height: 100%;
+                            top: 0;
+                            left: 0;
+                            color: #ffd300;
+                        }
+                        .rating__items{
+                            display: flex;
+                            position: absolute;
+                            width: 100%;
+                            height: 100%;
+                            top: 0;
+                            left: 0;
+                        }
+                        .rating__item{
+                            flex: 0 0 20%;
+                            height: 100%;
+                            opacity: 0;
+                        }
+                        .rating__value{
+                            font-size: 50%;
+                            line-height: 1;
+                            padding: 0px 0px 0px 10px;
+                        }
+                    </style>
+
+
+                    <div class="card p-3" th:each="el : ${cafe}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="review-stat">Total</h5>
+                            <div class="rating">
+                                <div class="rating__body">
+                                    <div class="rating__active"></div>
+                                    <div class="rating__items">
+                                        <input type="radio" class="rating__item" value="1" name="rating">
+                                        <input type="radio" class="rating__item" value="2" name="rating">
+                                        <input type="radio" class="rating__item" value="3" name="rating">
+                                        <input type="radio" class="rating__item" value="4" name="rating">
+                                        <input type="radio" class="rating__item" value="5" name="rating">
+                                    </div>
+                                </div>
+                                <div class="rating__value" style="visibility: hidden" th:text="${cafe.getRating()}">2.9</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 d-flex justify-content-between align-items-center">
+                            <h5 class="review-stat">Кухня</h5>
+                            <div class="rating">
+                                <div class="rating__body">
+                                    <div class="rating__active"></div>
+                                    <div class="rating__items">
+                                        <input type="radio" class="rating__item" value="1" name="rating1" disabled>
+                                        <input type="radio" class="rating__item" value="2" name="rating1" disabled>
+                                        <input type="radio" class="rating__item" value="3" name="rating1" disabled>
+                                        <input type="radio" class="rating__item" value="4" name="rating1" disabled>
+                                        <input type="radio" class="rating__item" value="5" name="rating1" disabled>
+                                    </div>
+                                </div>
+                                <div class="rating__value" style="visibility: hidden" th:text="${cafe.getCookery()}">2.9</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                            <h5 class="review-stat">Цены</h5>
+                            <div class="rating">
+                                <div class="rating__body">
+                                    <div class="rating__active"></div>
+                                    <div class="rating__items">
+                                        <input type="radio" class="rating__item" value="1" name="rating1">
+                                        <input type="radio" class="rating__item" value="2" name="rating1">
+                                        <input type="radio" class="rating__item" value="3" name="rating1">
+                                        <input type="radio" class="rating__item" value="4" name="rating1">
+                                        <input type="radio" class="rating__item" value="5" name="rating1">
+                                    </div>
+                                </div>
+                                <div class="rating__value" style="visibility: hidden" th:text="${cafe.getPrice()}">2.9</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                            <h5 class="review-stat">Сервис</h5>
+                            <div class="rating">
+                                <div class="rating__body">
+                                    <div class="rating__active"></div>
+                                    <div class="rating__items">
+                                        <input type="radio" class="rating__item" value="1" name="rating1">
+                                        <input type="radio" class="rating__item" value="2" name="rating1">
+                                        <input type="radio" class="rating__item" value="3" name="rating1">
+                                        <input type="radio" class="rating__item" value="4" name="rating1">
+                                        <input type="radio" class="rating__item" value="5" name="rating1">
+                                    </div>
+                                </div>
+                                <div class="rating__value" style="visibility: hidden" th:text="${cafe.getService()}">2.9</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                            <h5 class="review-stat">Атмосфера</h5>
+                            <div class="rating">
+                                <div class="rating__body">
+                                    <div class="rating__active"></div>
+                                    <div class="rating__items">
+                                        <input type="radio" class="rating__item" value="1" name="rating1">
+                                        <input type="radio" class="rating__item" value="2" name="rating1">
+                                        <input type="radio" class="rating__item" value="3" name="rating1">
+                                        <input type="radio" class="rating__item" value="4" name="rating1">
+                                        <input type="radio" class="rating__item" value="5" name="rating1">
+                                    </div>
+                                </div>
+                                <div class="rating__value" style="visibility: hidden" th:text="${cafe.getAtmosphere()}">2.9</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-1 d-flex justify-content-between align-items-center">
+                            <h5 class="review-stat">Персонал</h5>
+                            <div class="rating">
+                                <div class="rating__body">
+                                    <div class="rating__active"></div>
+                                    <div class="rating__items">
+                                        <input type="radio" class="rating__item" value="1" name="rating1">
+                                        <input type="radio" class="rating__item" value="2" name="rating1">
+                                        <input type="radio" class="rating__item" value="3" name="rating1">
+                                        <input type="radio" class="rating__item" value="4" name="rating1">
+                                        <input type="radio" class="rating__item" value="5" name="rating1">
+                                    </div>
+                                </div>
+                                <div class="rating__value" style="visibility: hidden" th:text="${cafe.getStaff()}">2.9</div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <script>
+                        "use strict"
+
+                        // $(document).ready(function){}
+
+                        const ratings = document.querySelectorAll('.rating')
+                        if  (ratings.length > 0)
+                        {
+                            initRatings()
+                        }
+
+                        function initRatings(){
+                            let ratingActive, ratingValue;
+                            for (let index = 0; index < ratings.length; index++ )
+                            {
+                                const rating = ratings[index];
+                                initRating(rating);
+                            }
+
+
+                            function initRating(rating){
+                                initRatingVars(rating);
+                                setRatingActiveWidth();
+                            }
+
+
+                            function initRatingVars(rating){
+                                ratingActive = rating.querySelector('.rating__active');
+                                ratingValue = rating.querySelector('.rating__value');
+                            }
+
+                            function setRatingActiveWidth(index = ratingValue.innerHTML){
+                                const ratingActiveWidth = index / 0.05;
+                                ratingActive.style.width = `${ratingActiveWidth}%`;
+                            }
+                        }
+                    </script>
+
+
+                    <!--                    -->
+
+
+                    <form id="algin-form" style="margin-top: var(--bs-gutter-y);" oninput="document.getElementById('res').innerHTML = (parseFloat(document.getElementById('story').value) + parseFloat(document.getElementById('actor').value) + parseFloat(document.getElementById('music').value) + parseFloat(document.getElementById('graphic').value) + parseFloat(document.getElementById('final').value)) / 5 "  method="POST">
+                        <div class="form-group">
+                            <h4>Leave a comment</h4>
+                            <label >Message</label>
+                            <textarea name="description" id="msg" cols="30" rows="5" class="form-control"></textarea>
+                        </div>
+<!--                        <div class="form-group">-->
+<!--                            <label for="name">Name</label>-->
+<!--                            <input type="text" name="name" id="fullname" class="form-control">-->
+<!--                        </div>-->
+
+                        <div class="form-group mt-1 d-flex justify-content-between align-items-center">
+                            <label> Атмосфера: <span id="rangeValue1">2.5</span></label>
+                            <input style="color:black;" type="range" min="0" max="5" step="0.5" list="valueList"  name="atmosphere" id="story" onchange="document.getElementById('rangeValue1').innerHTML = this.value;"  />
+
+                        </div>
+                        <div class="form-group mt-1 d-flex justify-content-between align-items-center">
+                            <label >Кухня: <span id="rangeValue2">2.5</span></label>
+                            <input style="color:black" type="range" min="0" max="5" step="0.5" list="valueList" name="cookery" id="actor" onchange="document.getElementById('rangeValue2').innerHTML = this.value;"  />
+
+                        </div>
+                        <div class="form-group mt-1 d-flex justify-content-between align-items-center">
+                            <label >Цены: <span id="rangeValue3">2.5</span></label>
+                            <input style="color:black;" type="range" min="0" max="5" step="0.5" list="valueList" name="price" id="music" onchange="document.getElementById('rangeValue3').innerHTML = this.value;"  />
+
+                        </div>
+                        <div class="form-group mt-1 d-flex justify-content-between align-items-center">
+                            <label >Сервис: <span id="rangeValue4">2.5</span></label>
+                            <input style="color:black;" type="range" min="0" max="5" step="0.5" list="valueList" name="service" id="graphic" onchange="document.getElementById('rangeValue4').innerHTML = this.value;"  />
+
+                        </div>
+                        <div class="form-group mt-1 d-flex justify-content-between align-items-center">
+                            <label>Персонал: <span id="rangeValue5">2.5</span></label>
+                            <input style="color:black;" type="range" min="0" max="5" step="0.5" list="valueList" name="staff" id="final"  onchange="document.getElementById('rangeValue5').innerHTML = this.value;"  />
+
+                        </div>
+                        <div class="form-group mt-1 d-flex justify-content-between align-items-center">
+                            <label>Итоговая оценка:</label>
+                            <output  id="res"  for="story actor music graphic final" >2.5</output>
+                        </div>
+
+
+
+                        <div class="form-group" style="margin-top: 0.5rem !important;">
+                            <p class="text-secondary">If you have a <a href="#" class="alert-link">gravatar account</a> your address will be used to display your profile picture.</p>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" id="post" class="btn btn-sm btn-outline-secondary">Post Comment</button>
+                        </div>
+                    </form>
+                    <datalist id="valueList">
+                        <option value="0" label="0"/>
+                        <option value="0.5" label="0.5"/>
+                        <option value="1" label="1"/>
+
+                        <option value="1.5" label="1.5"/>
+                        <option value="2" label="2"/>
+
+                        <option value="2.5" label="2.5"/>
+
+                        <option value="3" label="3"/>
+                        <option value="3.5" label="3.5"/>
+
+                        <option value="4" label="4"/>
+                        <option value="4.5" label="4.5"/>
+                        <option value="5" label="5"/>
+                    </datalist>
+                </div>
+            </div>
+        </div>
+
+        <div id="map" style="width: 100%; height: 400px; padding-right: 0; padding-left: 0;"></div>
     </div>
     </div>
+
+
+
+    <script type="text/javascript">
+
+
+            ymaps.ready(init);
+
+            function init() {
+                var address = 'Минск, ' + document.getElementById('mapAddress').innerHTML;
+                console.log(document.getElementById('mapAddress').innerText)
+                console.log(address)
+                //address = 'Москва, ул. Тверская, д. 1';
+
+                var myMap = new ymaps.Map('map', {
+                    center: [55.753994, 37.622093],
+                    zoom: 9
+                });
+
+                // Поиск координат центра Нижнего Новгорода.
+                ymaps.geocode(address, {
+                    /**
+                     * Опции запроса
+                     * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/geocode.xml
+                     */
+                    // Сортировка результатов от центра окна карты.
+                    // boundedBy: myMap.getBounds(),
+                    // strictBounds: true,
+                    // Вместе с опцией boundedBy будет искать строго внутри области, указанной в boundedBy.
+                    // Если нужен только один результат, экономим трафик пользователей.
+                    results: 1
+                }).then(function (res) {
+                    // Выбираем первый результат геокодирования.
+                    var firstGeoObject = res.geoObjects.get(0),
+                        // Координаты геообъекта.
+                        coords = firstGeoObject.geometry.getCoordinates(),
+                        // Область видимости геообъекта.
+                        bounds = firstGeoObject.properties.get('boundedBy');
+
+                    firstGeoObject.options.set('preset', 'islands#darkBlueDotIconWithCaption');
+                    // Получаем строку с адресом и выводим в иконке геообъекта.
+                    firstGeoObject.properties.set('iconCaption', firstGeoObject.getAddressLine());
+
+                    // Добавляем первый найденный геообъект на карту.
+                    myMap.geoObjects.add(firstGeoObject);
+                    // Масштабируем карту на область видимости геообъекта.
+                    myMap.setBounds(bounds, {
+                        // Проверяем наличие тайлов на данном масштабе.
+                        checkZoomRange: true
+                    });
+
+                    /**
+                     * Все данные в виде javascript-объекта.
+                     */
+                    console.log('Все данные геообъекта: ', firstGeoObject.properties.getAll());
+                    /**
+                     * Метаданные запроса и ответа геокодера.
+                     * @see https://api.yandex.ru/maps/doc/geocoder/desc/reference/GeocoderResponseMetaData.xml
+                     */
+                    console.log('Метаданные ответа геокодера: ', res.metaData);
+                    /**
+                     * Метаданные геокодера, возвращаемые для найденного объекта.
+                     * @see https://api.yandex.ru/maps/doc/geocoder/desc/reference/GeocoderMetaData.xml
+                     */
+                    console.log('Метаданные геокодера: ', firstGeoObject.properties.get('metaDataProperty.GeocoderMetaData'));
+                    /**
+                     * Точность ответа (precision) возвращается только для домов.
+                     * @see https://api.yandex.ru/maps/doc/geocoder/desc/reference/precision.xml
+                     */
+                    console.log('precision', firstGeoObject.properties.get('metaDataProperty.GeocoderMetaData.precision'));
+                    /**
+                     * Тип найденного объекта (kind).
+                     * @see https://api.yandex.ru/maps/doc/geocoder/desc/reference/kind.xml
+                     */
+                    console.log('Тип геообъекта: %s', firstGeoObject.properties.get('metaDataProperty.GeocoderMetaData.kind'));
+                    console.log('Название объекта: %s', firstGeoObject.properties.get('name'));
+                    console.log('Описание объекта: %s', firstGeoObject.properties.get('description'));
+                    console.log('Полное описание объекта: %s', firstGeoObject.properties.get('text'));
+                    /**
+                     * Прямые методы для работы с результатами геокодирования.
+                     * @see https://tech.yandex.ru/maps/doc/jsapi/2.1/ref/reference/GeocodeResult-docpage/#getAddressLine
+                     */
+                    console.log('\nГосударство: %s', firstGeoObject.getCountry());
+                    console.log('Населенный пункт: %s', firstGeoObject.getLocalities().join(', '));
+                    console.log('Адрес объекта: %s', firstGeoObject.getAddressLine());
+                    console.log('Наименование здания: %s', firstGeoObject.getPremise() || '-');
+                    console.log('Номер здания: %s', firstGeoObject.getPremiseNumber() || '-');
+
+                    /**
+                     * Если нужно добавить по найденным геокодером координатам метку со своими стилями и контентом балуна, создаем новую метку по координатам найденной и добавляем ее на карту вместо найденной.
+                     */
+                    /**
+                     var myPlacemark = new ymaps.Placemark(coords, {
+             iconContent: 'моя метка',
+             balloonContent: 'Содержимое балуна <strong>моей метки</strong>'
+             }, {
+             preset: 'islands#violetStretchyIcon'
+             });
+
+                     myMap.geoObjects.add(myPlacemark);
+                     */
+                });
+            }
+    </script>
+
 
 
 </main>

@@ -1,50 +1,87 @@
 package com.example.traineejava.controllers;
 
-import com.example.traineejava.models.Cafe;
-import com.example.traineejava.models.Category;
-import com.example.traineejava.models.Dish;
-import com.example.traineejava.repo.CafeRepository;
-import com.example.traineejava.repo.CategoryRepository;
-import com.example.traineejava.repo.DishRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import com.example.traineejava.models.*;
+import com.example.traineejava.repo.*;
+import com.example.traineejava.services.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/cafes")
 public class CafeController {
 
-    @Autowired
     private CategoryRepository categoryRepository;
 
-    @Autowired
     private CafeRepository cafeRepository;
 
-    @Autowired
     private DishRepository dishRepository;
 
+    private UserService userService;
 
-    @GetMapping("")
+    private UserRepository userRepository;
+
+    private CommentRepository commentRepository;
+
+    private RatingRepository ratingRepository;
+
+    public CafeController(CategoryRepository categoryRepository,
+                          CafeRepository cafeRepository,
+                          DishRepository dishRepository,
+                          UserService userService,
+                          UserRepository userRepository, CommentRepository commentRepository, RatingRepository ratingRepository) {
+        this.categoryRepository = categoryRepository;
+        this.cafeRepository = cafeRepository;
+        this.dishRepository = dishRepository;
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
+        this.ratingRepository = ratingRepository;
+    }
+
+    @GetMapping
     public String cafeMain(@RequestParam(required = false) String name, @RequestParam(required = false) String f, @RequestParam(required = false) String s, Model model)
     {
+        if (f == null) f = "0.0";
+        if (s == null) s = "5.0";
+        if(f.isEmpty()) f = "0.0";
+        if(s.isEmpty()) s = "5.0";
         Iterable<Cafe> cafes;
         if(name != null && !name.isEmpty()){
-            if(f != null && s != null){
-                cafes = cafeRepository.findByNameContainingIgnoreCaseAndRatingBetween(name, Float.parseFloat(f), Float.parseFloat(s));
+            if(!f.equals("") || !s.equals("")){
+                //cafes = cafeRepository.findByNameContainingIgnoreCaseAndRatingBetween(name, Float.parseFloat(f), Float.parseFloat(s));
+                cafes = cafeRepository.findByNameContainingIgnoreCase(name);
+                Iterator<Cafe> iterator = cafes.iterator();
+                while (iterator.hasNext()) {
+                    Cafe cafe = iterator.next();
+                    if ((cafe.getRating() < Float.parseFloat(f)) || (cafe.getRating() > Float.parseFloat(s))) {
+                        iterator.remove();
+                    }
+                }
             }
             else{
                 cafes = cafeRepository.findByNameContainingIgnoreCase(name);
             }
         }
         else if(f != null && s != null){
-            cafes = cafeRepository.findByRatingBetween(Float.parseFloat(f),Float.parseFloat(s));
+            //Iterable<Comment> comments = commentRepository.findByCafe();
+            cafes = cafeRepository.findAll();
+            Iterator<Cafe> iterator = cafes.iterator();
+            while (iterator.hasNext()) {
+                Cafe cafe = iterator.next();
+                if ((cafe.getRating() < Float.parseFloat(f)) || (cafe.getRating() > Float.parseFloat(s))) {
+                    iterator.remove();
+                }
+            }
+
+
+
+//            Rating rate1 = new Rating(Float.parseFloat(f));
+//            Rating rate2 = new Rating(Float.parseFloat(s));
+//            cafes = cafeRepository.findByRatingBetween(rate1,rate2);
+            //cafes = cafeRepository.findByRatingBetween(Float.parseFloat(f),Float.parseFloat(s));
         }
         else {
             cafes = cafeRepository.findAll(); //массив всех данных полученные из таблички Post
@@ -63,6 +100,9 @@ public class CafeController {
     public String cafePostAdd(@RequestParam String description, @RequestParam String link, @RequestParam String name, @RequestParam String address, Model model)
     {
         Cafe cafe = new Cafe( description, link, name, address);
+        Rating rating = new Rating();
+        cafe.initRating(rating);
+        ratingRepository.save(rating);
         cafeRepository.save(cafe);
         return "redirect:/cafes";
     }
@@ -93,9 +133,47 @@ public class CafeController {
             model.addAttribute("categories", categoryList);
 
             model.addAttribute("cafe", cafe);
+
+
+            Iterable<Comment> comments = commentRepository.findByCafe(cafeOptional.get());
+            model.addAttribute("comments", comments);
+
+
+
         }
         return "cafe/cafe-details";
     }
+
+    @PostMapping("/{idCafe}")
+    public String commentAdd(@PathVariable(value = "idCafe") long idCafe, @RequestParam(required = false) String description, @RequestParam(required = false) float atmosphere, @RequestParam(required = false) float cookery, @RequestParam(required = false) float price, @RequestParam(required = false) float service, @RequestParam(required = false) float staff) {
+
+
+        Cafe cafe = cafeRepository.findById(idCafe).orElseThrow();
+
+        String email = userService.getCurrentUser();
+        User user = userRepository.findUserByEmail(email);
+        if(user==null){
+            user = userRepository.findUserByEmail("noname");
+        }
+        float rate = (service+staff+cookery+atmosphere+price) / 5;
+        Rating rating = new Rating(rate,staff, atmosphere, service, price, cookery);
+        ratingRepository.save(rating);
+
+
+        Iterable<Comment> comments = commentRepository.findByCafe(cafe);
+        int count = 0;
+        for(Comment c: comments){
+            count++;
+        }
+        cafe.setRating(rating, count);
+        cafeRepository.save(cafe);
+
+        Comment com = new Comment(rating, new Date(), description, user, cafe);
+        commentRepository.save(com);
+
+        return "redirect:/cafes/{idCafe}";
+    }
+
 
     @GetMapping("/{idCafe}/edit")
     public String cafeEdit(@PathVariable(value = "idCafe") long id, Model model)
@@ -136,7 +214,7 @@ public class CafeController {
     {
         Cafe cafe = cafeRepository.findById(id).orElseThrow();
         cafe.setName(name);
-        cafe.setRating(rating);
+       // cafe.setRating(rating);
         cafe.setDescription(description);
         cafe.setAddress(address);
         cafe.setLinkPhoto(linkPhoto);

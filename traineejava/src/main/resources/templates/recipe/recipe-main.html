@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{blocks/head :: head}"></head>
+<body>
+
+
+<div th:insert="~{blocks/side-bar :: side-bar}"></div>
+
+
+<main style="margin-left: 4.5rem; ">
+
+
+  <header th:insert="~{blocks/header :: header}"></header>
+
+
+
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Рецепты, которые сводят с ума </h1>
+        <p class="lead text-body-secondary">Мы собрали рецепты со всего мира, чтобы вы могли попробовать кухни разных народов мира у себя на даче.</p>
+        <p>
+          <a href="/dishes/add" class="btn btn-primary my-2">Добавить новое блюдо</a>
+          <a href="/aboutus" class="btn btn-secondary my-2">Узнать больше о нашем деле</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="album py-5 bg-body-tertiary">
+    <div class="container">
+
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col" th:each="rec:${recipes}">
+          <div class="card shadow-sm">
+            <img class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="${rec.getLinkPhoto()}" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect></img>
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0" th:text="${rec.getName()}"></h3>
+                <!--                  <strong class="d-inline-block mb-2 text-primary-emphasis" style="float: right; margin-bottom: 0!important;" th:text="${el.getRating()}"></strong>-->
+              </div>
+              <p class="card-text" th:text="${rec.getAuthor()}"></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+
+                  <a  th:href="'/dishes/' + ${rec.getTitle().getIdDish()} + '/recipes/' + ${rec.getId()}"  class="btn btn-sm btn-outline-secondary">View</a>
+                  <a  class="btn btn-sm btn-outline-secondary" th:href="'/dishes/' + ${rec.getTitle().getIdDish()} + '/recipes/' + ${rec.getId()} + '/edit'">Edit</a>
+                </div>
+                <small class="text-body-secondary" th:text="${rec.getServings()}"></small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div th:insert="~{blocks/footer :: footer}"></div>
+
+
+
+</body>
+</html>

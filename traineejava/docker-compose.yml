@@ -1,0 +1,16 @@
+version: '3.1'
+services:
+  db:
+    image: mysql
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_DATABASE=tasktrainee
+      - MYSQL_PASSWORD=12345
+      - MYSQL_ROOT_PASSWORD=12345
+
+
+
+
+
