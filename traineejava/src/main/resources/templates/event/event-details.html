@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link href="/css/nav.css" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Roboto);
+    /*Just the background stuff*/
+    span.s1 {
+      position: absolute;
+      top: 0;
+      font-size: 15rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #3C4447;
+    }
+
+    span.s2 {
+      font-weight: 800;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 15rem;
+      text-transform: uppercase;
+      color: #3C4447;
+    }
+
+    /*My hum... body.. yeah..*/
+    body {
+      background-color: #353B3F;
+      font-family: "Roboto", sans-serif;
+    }
+
+    /* The card */
+    .card {
+      position: relative;
+      height: 450px;
+      width: 900px;
+      margin: 200px auto;
+      background-color: #FFF;
+      -webkit-box-shadow: 10px 10px 93px 0px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 10px 10px 93px 0px rgba(0, 0, 0, 0.75);
+      box-shadow: 10px 10px 93px 0px rgba(0, 0, 0, 0.75);
+    }
+
+    /* Image on the left side */
+    .thumbnail {
+      float: left;
+      position: relative;
+      left: 30px;
+      top: -60px;
+      height: 100%;
+      width: 530px;
+      -webkit-box-shadow: 10px 10px 60px 0px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 10px 10px 60px 0px rgba(0, 0, 0, 0.75);
+      box-shadow: 10px 10px 60px 0px rgba(0, 0, 0, 0.75);
+      overflow: hidden;
+    }
+
+    /*object-fit: cover;*/
+    /*object-position: center;*/
+    img.left {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: auto;
+      width: 100%;
+      -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    /* Right side of the card */
+    .right {
+      margin-left: 590px;
+      margin-right: 20px;
+    }
+
+    h1 {
+      padding-top: 15px;
+      font-size: 1.3rem;
+      color: #4B4B4B;
+    }
+
+    .author {
+      background-color: #9ECAFF;
+      height: 30px;
+      width: 110px;
+      border-radius: 20px;
+    }
+
+    .author > img {
+      padding-top: 5px;
+      margin-left: 10px;
+      float: left;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+    }
+
+    h2 {
+      padding-top: 8px;
+      margin-right: 6px;
+      text-align: right;
+      font-size: 0.8rem;
+    }
+    .separator {
+      margin-top: 10px;
+      border: 1px solid #C3C3C3;
+    }
+
+    p {
+      text-align: justify;
+      padding-top: 10px;
+      font-size: 0.95rem;
+      line-height: 150%;
+      color: #4B4B4B;
+    }
+
+    /* DATE of release*/
+    h5 {
+      position: absolute;
+      left: 30px;
+      bottom: -80px;
+      font-size: 3rem;
+      color: #353B3F;
+    }
+
+    h6 {
+      position: absolute;
+      left: 30px;
+      bottom: -55px;
+      font-size: 2rem;
+      color: #C3C3C3;
+    }
+
+    /* Those futur buttons */
+    ul {
+      padding-left: 0;
+      /*margin-left: 250px;*/
+    }
+
+    li {
+      display: inline;
+      list-style: none;
+      padding-right: 40px;
+      color: #7B7B7B;
+    }
+
+    /* Floating action button */
+    .fab {
+      position: absolute;
+      right: 50px;
+      bottom: -40px;
+      box-sizing: border-box;
+      padding-top: 18px;
+      background-color: #1875D0;
+      width: 80px;
+      height: 80px;
+      color: white;
+      text-align: center;
+      border-radius: 50%;
+      -webkit-box-shadow: 10px 10px 50px 0px rgba(0, 0, 0, 0.75);
+      -moz-box-shadow: 10px 10px 50px 0px rgba(0, 0, 0, 0.75);
+      box-shadow: 10px 10px 50px 0px rgba(0, 0, 0, 0.75);
+    }
+  </style>
+
+</head>
+<body>
+
+<div th:insert="~{blocks/nav :: nav}"></div>
+
+
+<div class="fond"> <span class="s1">event </span><span class="s2">event</span></div>
+<div class="card" th:each="el, iterStat:${posts}">
+  <div class="thumbnail"><img class="left" th:src="${el.linkPhoto}"/></div>
+  <div class="right">
+    <h1 th:text="${el.text}">Why you Need More Magnesium in Your Daily Diet</h1>
+    <div class="author" style="display: flex; align-items: center; width: fit-content">
+      <img th:src="${el.user.getProfilePhotoUrl()}" style="padding-right: 10px; padding-top: 0px" />
+      <h2 th:text="${el.user.getFirstName()} + ' ' + ${el.user.getLastName()}" style="padding-right: 10px; padding-top: 0px">Igor MARTY</h2>
+    </div>
+    <div class="separator"></div>
+    <p th:text="${el.description}"></p>
+
+    <ul style="display: flex">
+      <li th:text="${el.start.dayOfMonth}" style="padding-right: 10px">12</li>
+      <li th:switch="${el.start.monthValue}" style="padding-right: 190px">
+        <th:block th:case="1">JANUARY</th:block>
+        <th:block th:case="2">FEBRUARY</th:block>
+        <th:block th:case="3">MARCH</th:block>
+        <th:block th:case="4">APRIL</th:block>
+        <th:block th:case="5">MAY</th:block>
+        <th:block th:case="6">JUNE</th:block>
+        <th:block th:case="7">JULY</th:block>
+        <th:block th:case="8">AUGUST</th:block>
+        <th:block th:case="9">SEPTEMBER</th:block>
+        <th:block th:case="10">OCTOBER</th:block>
+        <th:block th:case="11">NOVEMBER</th:block>
+        <th:block th:case="12">DECEMBER</th:block>
+        <th:block th:case="*" th:remove="tag">Unknown</th:block> <!-- По умолчанию, если значение не совпадает ни с одним из предыдущих -->
+      </li>
+      <li><i class="fa fa-shopping-cart fa-1x"></i></li>
+    </ul>
+    <div class="fab"><i class="fa fa-arrow-down fa-3x"> </i></div>
+  </div>
+
+
+</div>
+
+
+</body>
+</html>

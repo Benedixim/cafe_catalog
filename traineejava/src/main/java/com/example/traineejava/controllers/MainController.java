@@ -28,6 +28,7 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +46,9 @@ public class MainController {
 
     @Autowired
     private RatingRepository ratingRepository;
+
+    @Autowired
+    private EventRepository eventRepository;
 
     @GetMapping("/user/icon")
     public ResponseEntity<Resource> getProfile() {
@@ -286,6 +290,8 @@ public class MainController {
         model.addAttribute("user", user);
         return "main/profile";
     }
+
+
 
 
 

@@ -1,62 +1,49 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:insert="~{blocks/head :: head}"></head>
-
 <body>
-<div th:insert="~{blocks/side-bar :: side-bar}"></div>
-<div th:insert="~{blocks/side-bar :: side-bar}"></div>
+<div class="sidebar" th:insert="~{blocks/side-bar :: side-bar}"></div>
+<div class="sidebar" th:insert="~{blocks/side-bar :: side-bar}"></div>
 
+<header th:insert="~{blocks/header :: header}"></header>
 
-<main style="margin-left: 4.5rem; ">
-    <header th:insert="~{blocks/header :: header}"></header>
-
-
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">Вся еда Минска здесь!</h1>
-        <p class="lead text-body-secondary">Сейчас в этом списке <b th:text="${dishCount}"></b> гастрономических изысков. Красной икры или трюфелей в нем, увы, пока нет. Но есть другие блюда, которые вы точно пробовали. Некоторые из них неплохо готовят в Минске.</p>
-        <p>
-          <a href="/dishes/add" class="btn btn-primary my-2">Добавить блюдо</a>
-          <a href="/aboutus" class="btn btn-secondary my-2">Узнать больше о нашем деле</a>
-        </p>
+<main class="content">
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title">Вся еда Минска здесь!</h1>
+      <p class="hero-description">Сейчас в этом списке <b th:text="${dishCount}"></b> гастрономических изысков. Красной икры или трюфелей в нем, увы, пока нет. Но есть другие блюда, которые вы точно пробовали. Некоторые из них неплохо готовят в Минске.</p>
+      <div class="hero-buttons">
+        <a href="/dishes/add" class="btn btn-primary">Добавить блюдо</a>
+        <a href="/aboutus" class="btn btn-secondary">Узнать больше о нашем деле</a>
       </div>
     </div>
   </section>
 
-  <div class="album py-5 bg-body-tertiary">
+  <section class="dishes">
     <div class="container">
-
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      <div class="row">
         <div class="col" th:each="el:${posts}">
-          <div class="card shadow-sm">
-            <img class="bd-placeholder-img card-img-top" width="100%" height="225" th:src="${el.linkPhoto}" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect></img>
+          <div class="card">
+            <img class="card-img" th:src="${el.linkPhoto}" alt="Dish Image">
             <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center">
-                <h3 class="mb-0" th:text="${el.name}"></h3>
-                <strong class="d-inline-block mb-2 text-primary-emphasis" style="float: right; margin-bottom: 0!important;" th:text="${el.getWeight()} + 'g'"></strong>
-              </div>
-              <p class="card-text" th:text="${el.description}"></p>
-              <div class="d-flex justify-content-between align-items-center">
+              <h3 class="card-title" th:text="${el.name}"></h3>
+              <p class="card-description" th:text="${el.description}"></p>
+              <div class="card-footer">
                 <div class="btn-group">
-                  <a  th:href="'/dishes/' + ${el.idDish}"  class="btn btn-sm btn-outline-secondary">View</a>
-                  <a  class="btn btn-sm btn-outline-secondary" th:href="'/dishes/' + ${el.idDish} + '/edit'">Edit</a>
+                  <a th:href="'/dishes/' + ${el.idDish}" class="btn btn-secondary">View</a>
+                  <a th:href="'/dishes/' + ${el.idDish} + '/edit'" class="btn btn-secondary">Edit</a>
                 </div>
-                <small class="text-body-secondary" th:text="'~' + ${el.price} + '$'"></small>
+                <small class="card-price" th:text="'~' + ${el.price} + '$'"></small>
               </div>
             </div>
           </div>
         </div>
-
-
-
       </div>
     </div>
-  </div>
-
+  </section>
 </main>
 
-<div th:insert="~{blocks/footer :: footer}"></div>
+<footer th:insert="~{blocks/footer :: footer}"></footer>
 
 </body>
 </html>

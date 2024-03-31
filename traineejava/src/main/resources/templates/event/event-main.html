@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+
+
+
+
+
+
+
+
+
+    * {
+      margin: 0;
+      padding: 0;
+      transition: 0.05s ease-in;
+      /*DIMENSIONS*/
+      --dim1: 11vw;
+      --dim2: 0.5vw;
+    }
+
+    /*LIBRARY*/
+    #title {
+      margin: auto;
+      flex-direction: column;
+      height: calc(2 * var(--dim1));
+    }
+    #title > h1 {
+      font-family: Roboto, sans-serif;
+      font-size: 10vw;
+    }
+    #title > p {
+      font-family: Heebo, sans-serif;
+      font-size: 2vw;
+    }
+    .calendar-frame {
+      padding: var(--dim2);
+      width: 84vw;
+      margin: auto;
+      flex-wrap: wrap;
+    }
+    .day-frame {
+      margin: var(--dim2);
+      height: var(--dim1);
+      width: var(--dim1);
+    }
+    .day-number {
+      font-family: Roboto, sans-serif;
+      font-size: 5vw;
+      text-shadow: 0 0 1vw rgba(0, 0, 0, 0.25);
+    }
+    .day-label {
+      width: var(--dim1);
+      position: absolute;
+      color: rgba(255, 255, 255, 0);
+      background-color: rgba(0, 0, 0, 0);
+      font-size: 1vw;
+      font-family: Heebo, sans-serif;
+    }
+    .real:hover > .day-label {
+      color: rgba(255, 255, 255, 1);
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    .real {
+      background-color: black;
+      background-repeat: no-repeat;
+      background-size: cover;
+      color: white;
+    }
+    .real:hover {
+      transform: scale(1.1, 1.1);
+    }
+    .real:hover > .day-number {
+      color: rgba(0, 0, 0, 0);
+      text-shadow: 0 0 10vw rgba(0, 0, 0, 0);
+    }
+    .center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /*DAYS*/
+    #one {
+      background-image: url("https://images.unsplash.com/photo-1585226906833-c76e175379f7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=777&q=80");
+      background-position: center bottom;
+    }
+    #two {
+      background-image: url("https://images.unsplash.com/photo-1500519082938-cdd6b2f39de6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+      background-position: center top;
+    }
+    #three {
+      background-image: url("https://images.unsplash.com/photo-1501437638401-4addcfd56d3d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=686&q=80");
+      background-position: center;
+    }
+    #four {
+      background-image: url("https://images.unsplash.com/photo-1554103494-90f9e0883a85?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
+      background-position: center;
+    }
+    #five {
+      background-image: url("https://images.unsplash.com/photo-1590055531615-f16d36ffe8ec?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80");
+      background-position: left center;
+    }
+    #six {
+      background-image: url("https://images.unsplash.com/photo-1615361200098-9e630ec29b4e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=764&q=80");
+      background-position: left center;
+    }
+    #seven {
+      background-image: url("https://images.unsplash.com/photo-1628863353691-0071c8c1874c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+      background-position: center;
+    }
+    #eight {
+      background-image: url("https://images.unsplash.com/photo-1539626845749-3d350356324c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+      background-position: center;
+    }
+    #nine {
+      background-image: url("https://images.unsplash.com/photo-1593504049359-74330189a345?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=627&q=80");
+      background-position: center;
+    }
+    #ten {
+      background-image: url("https://images.unsplash.com/photo-1517398629-9d24ea1f4f94?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
+      background-position: left bottm;
+    }
+    #eleven {
+      background-image: url("https://images.unsplash.com/photo-1581093196867-ca3dba3c721b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
+      background-position: center;
+    }
+    #twelve {
+      background-image: url("https://images.unsplash.com/photo-1485846234645-a62644f84728?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1459&q=80");
+      background-position: center;
+    }
+    #thirteen {
+      background-image: url("https://images.unsplash.com/photo-1619528395742-4e41ab87403b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=881&q=80");
+      background-position: center;
+    }
+    #fourteen {
+      background-image: url("https://images.unsplash.com/photo-1585768750637-ada36319a484?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80");
+      background-position: center;
+    }
+    #fifteen {
+      background-image: url("https://images.unsplash.com/photo-1588756264692-d396bca41fb1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+      background-position: center;
+    }
+    #sixteen {
+      background-image: url("https://images.unsplash.com/photo-1583259901105-387e69091d51?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
+      background-position: center bottom;
+    }
+    #seventeen {
+      background-image: url("https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=685&q=80");
+      background-position: center;
+    }
+    #eighteen {
+      background-image: url("https://images.unsplash.com/photo-1608224873587-81ee37394b4e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80");
+      background-position: center top;
+    }
+    #nineteen {
+      background-image: url("https://images.unsplash.com/photo-1636450525985-f38e86fd4759?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
+      background-position: center;
+    }
+    #twenty {
+      background-image: url("https://images.unsplash.com/photo-1517849845537-4d257902454a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80");
+      background-position: center bottom;
+    }
+    #twenty-one {
+      background-image: url("https://images.unsplash.com/photo-1577942948749-a3dbb5c6db0a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+      background-position: center;
+    }
+    #twenty-two {
+      background-image: url("https://images.unsplash.com/photo-1613931507118-955a5f42e1c4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1935&q=80");
+      background-position: center;
+    }
+    #twenty-three {
+      background-image: url("https://images.unsplash.com/photo-1573504816327-07f3bf7accac?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80");
+      background-position: center;
+    }
+    #twenty-four {
+      background-image: url("https://images.unsplash.com/photo-1497581175344-8a5f1a0142a5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=715&q=80");
+      background-position: center top;
+    }
+    #twenty-five {
+      background-image: url("https://images.unsplash.com/photo-1593980235000-5cf185e8df10?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80");
+      background-position: center;
+    }
+    #twenty-six {
+      background-image: url("https://images.unsplash.com/photo-1551238875-13b9d38454db?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1026&q=80");
+      background-position: center;
+    }
+    #twenty-seven {
+      background-image: url("https://images.unsplash.com/photo-1589656966895-2f33e7653819?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+      background-position: center;
+    }
+    #twenty-eight {
+      background-image: url("https://images.unsplash.com/photo-1601708832940-425f2c21957c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
+      background-position: center;
+    }
+
+  </style>
+  <link href="/css/nav.css" rel="stylesheet">
+</head>
+<body>
+
+<header class="header">
+  <h1>Life is short</h1>
+</header>
+
+<div th:insert="~{blocks/nav :: nav}"></div>
+
+<!-- days sourced from: https://nationaldaycalendar.com/february/ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo&family=Roboto:wght@900&display=swap" rel="stylesheet">
+
+<div id="title" class="center">
+  <h1 th:text="${#dates.format(#dates.createNow(), 'MMM yyyy')}"></h1>
+  <p>Holidays and Daily Observances in the Republic of Belarus</p>
+</div>
+
+
+<div class="calendar-frame center">
+
+  <div th:each="el, iterStat:${posts}" class="day-frame center real"  th:style="'background-image: url(' + ${el.linkPhoto} + ');'">
+    <h2 class="day-number" th:text="${iterStat.index + 1}"></h2>
+    <a th:href="@{/details/{id}(id=${el.id})}" class="day-label center" th:text="${el.text}">Dark Chocolate Day</a>
+<!--    <div class="day-label center" th:text="${el.text}">Dark Chocolate Day</div>-->
+  </div>
+  <div class="day-frame center real" id='two'>
+    <h2 class="day-number">2</h2>
+    <div class="day-label center">Groundhog Day</div>
+  </div>
+  <div class="day-frame center real" id='three'>
+    <h2 class="day-number">3</h2>
+    <div class="day-label center">Carrot Cake Day</div>
+  </div>
+  <div class="day-frame center real" id="four">
+    <h2 class="day-number">4</h2>
+    <div class="day-label center">Wear Red Day</div>
+  </div>
+  <div class="day-frame center real" id='five'>
+    <h2 class="day-number">5</h2>
+    <div class="day-label center">Weatherperson's Day</div>
+  </div>
+  <div class="day-frame center real" id='six'>
+    <h2 class="day-number">6</h2>
+    <div class="day-label center">Chopsticks Day</div>
+  </div>
+  <div class="day-frame center real" id='seven'>
+    <h2 class="day-number">7</h2>
+    <div class="day-label center">Periodic Table Day</div>
+  </div>
+  <div class="day-frame center real" id='eight'>
+    <h2 class="day-number">8</h2>
+    <div class="day-label center">Kite Flying Day</div>
+  </div>
+  <div class="day-frame center real" id='nine'>
+    <h2 class="day-number">9</h2>
+    <div class="day-label center">Pizza Day</div>
+  </div>
+  <div class="day-frame center real" id='ten'>
+    <h2 class="day-number">10</h2>
+    <div class="day-label center">Umbrella Day</div>
+  </div>
+  <div class="day-frame center real" id='eleven'>
+    <h2 class="day-number">11</h2>
+    <div class="day-label center">Inventor's Day</div>
+  </div>
+  <div class="day-frame center real" id='twelve'>
+    <h2 class="day-number">12</h2>
+    <div class="day-label center">Global Movie Day</div>
+  </div>
+  <div class="day-frame center real" id='thirteen'>
+    <h2 class="day-number">13</h2>
+    <div class="day-label center">Tortellini Day</div>
+  </div>
+  <div class="day-frame center real" id='fourteen'>
+    <h2 class="day-number">14</h2>
+    <div class="day-label center">Valentine's Day</div>
+  </div>
+  <div class="day-frame center real" id='fifteen'>
+    <h2 class="day-number">15</h2>
+    <div class="day-label center">Gumdrop Day</div>
+  </div>
+  <div class="day-frame center real" id='sixteen'>
+    <h2 class="day-number">16</h2>
+    <div class="day-label center">Do a Grouch a Favor</div>
+  </div>
+  <div class="day-frame center real" id='seventeen'>
+    <h2 class="day-number">17</h2>
+    <div class="day-label center">Cabbage Day</div>
+  </div>
+  <div class="day-frame center real" id='eighteen'>
+    <h2 class="day-number">18</h2>
+    <div class="day-label center">Battery Day</div>
+  </div>
+  <div class="day-frame center real" id='nineteen'>
+    <h2 class="day-number">19</h2>
+    <div class="day-label center">Chocolate Mint Day</div>
+  </div>
+  <div class="day-frame center real" id='twenty'>
+    <h2 class="day-number">20</h2>
+    <div class="day-label center">Love Your Pet Day</div>
+  </div>
+  <div class="day-frame center real" id='twenty-one'>
+    <h2 class="day-number">21</h2>
+    <div class="day-label center">President's Day</div>
+  </div>
+  <div class="day-frame center real" id='twenty-two'>
+    <h2 class="day-number">22</h2>
+    <div class="day-label center">Sweet Potato Day</div>
+  </div>
+  <div class="day-frame center real" id='twenty-three'>
+    <h2 class="day-number">23</h2>
+    <div class="day-label center">Tile Day</div>
+  </div>
+  <div class="day-frame center real" id='twenty-four'>
+    <h2 class="day-number">24</h2>
+    <div class="day-label center">Toast Day</div>
+  </div>
+  <div class="day-frame center real" id='twenty-five'>
+    <h2 class="day-number">25</h2>
+    <div class="day-label center">Clam Chowder Day</div>
+  </div>
+  <div class="day-frame center real" id='twenty-six'>
+    <h2 class="day-number">26</h2>
+    <div class="day-label center">Pistachio Day</div>
+  </div>
+  <div class="day-frame center real" id='twenty-seven'>
+    <h2 class="day-number">27</h2>
+    <div class="day-label center">Polar Bear Day</div>
+  </div>
+  <div class="day-frame center real" id='twenty-eight'>
+    <h2 class="day-number">28</h2>
+    <div class="day-label center">Tooth Fairy Day</div>
+  </div>
+  <div class="day-frame placeholder"></div>
+  <div class="day-frame placeholder"></div>
+  <div class="day-frame placeholder"></div>
+  <div class="day-frame placeholder"></div>
+  <div class="day-frame placeholder"></div>
+</div>
+
+</body>
+</html>

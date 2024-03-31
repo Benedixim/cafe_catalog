@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -47,7 +48,9 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(LogoutConfigurer::permitAll)
-                .csrf().disable();
+                //.csrf().disable();
+                .csrf(AbstractHttpConfigurer::disable);
+
 
         return http.build();
     }
